@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDSolutions.ai | Intelligent Web Systems</title>
+<!-- Scripts -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- AURA: Scroll Animation Logic -->
+<script>
+(function () {
+const style = document.createElement("style");
+style.textContent = `
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+`;
+document.head.appendChild(style);
+const once = true;
+if (!window.__inViewIO) {
+window.__inViewIO = new IntersectionObserver((entries) => {
+entries.forEach((entry) => {
+if (entry.isIntersecting) {
+entry.target.classList.add("animate");
+if (once) window.__inViewIO.unobserve(entry.target);
+}
+});
+}, { threshold: 0.15, rootMargin: "0px 0px -5% 0px" });
+}
+window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+document.querySelectorAll(selector).forEach((el) => {
+window.__inViewIO.observe(el);
+});
+};
+document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+})();
+</script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+/* Base Settings */
+body { font-family: 'Inter', sans-serif; background-color: #030304; color: #d1d5db; overflow-x: hidden; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-space { font-family: 'Space Grotesk', sans-serif; }
+.font-geist { font-family: 'Geist', sans-serif; }
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #030304; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+/* --- AURA: Blur In Animation Keyframes --- */
+@keyframes animationIn {
+0% { opacity: 0.08; filter: blur(14px); transform: translateY(18px); }
+100% { opacity: 1; filter: blur(0px); transform: translateY(0); }
+}
+/* --- Premium Hover Effects --- */
+.premium-card {
+transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+border-color 0.4s ease;
+}
+.premium-card:hover {
+transform: scale(1.01);
+box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5), 0 0 30px rgba(59, 130, 246, 0.1);
+border-color: rgba(59, 130, 246, 0.25);
+z-index: 10;
+}
+/* --- Spotlight Logic --- */
+.spotlight-wrapper {
+position: relative;
+background: rgba(255,255,255,0.02);
+padding: 1px;
+border-radius: 1rem;
+overflow: hidden;
+}
+.spotlight-wrapper::before {
+content: "";
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background: radial-gradient(800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.15), transparent 40%);
+opacity: 0;
+transition: opacity 0.5s ease;
+z-index: 0;
+pointer-events: none;
+}
+.spotlight-wrapper:hover::before { opacity: 1; }
+.spotlight-card {
+position: relative;
+background: #08080A;
+border-radius: 0.95rem;
+z-index: 1;
+height: 100%;
+}
+.spotlight-card::after {
+content: "";
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background: radial-gradient(600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.08), transparent 40%);
+opacity: 0;
+transition: opacity 0.5s ease;
+pointer-events: none;
+border-radius: inherit;
+}
+.spotlight-card:hover::after { opacity: 1; }
+/* --- 3D Flip Cards --- */
+.flip-group { perspective: 2000px; }
+.flip-inner {
+position: relative;
+width: 100%;
+height: 100%;
+transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+transform-style: preserve-3d;
+}
+.flip-group:hover .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+position: absolute;
+inset: 0;
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
+border-radius: 1rem;
+overflow: hidden;
+}
+.flip-front {
+background: #08080A;
+z-index: 2;
+border: 1px solid rgba(255,255,255,0.05);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+.flip-back {
+background: #0B0B0E;
+transform: rotateY(180deg);
+border: 1px solid rgba(59, 130, 246, 0.3);
+box-shadow: 0 0 30px rgba(59, 130, 246, 0.15) inset;
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 2.5rem;
+}
+/* --- Transformation Pills --- */
+.trans-pill { transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+.trans-pill:hover {
+background: rgba(255,255,255,0.03);
+border-color: rgba(59, 130, 246, 0.4);
+transform: scale(1.02);
+box-shadow: 0 0 30px rgba(59,130,246,0.15);
+}
+.trans-pill .hollow-pill { transition: all 0.3s ease; }
+.trans-pill:hover .hollow-pill { background-color: currentColor; box-shadow: 0 0 10px currentColor; }
+/* --- Animations --- */
+@keyframes color-shift {
+0% { color: #3b82f6; } 33% { color: #8b5cf6; } 66% { color: #60a5fa; } 100% { color: #3b82f6; }
+}
+.animate-color-cycle { animation: color-shift 6s ease-in-out infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes ambient-pulse {
+0% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0.15; } 100% { transform: scale(1); opacity: 0.3; }
+}
+@keyframes glow-pulse {
+0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1); } 50% { box-shadow: 0 0 15px 0 rgba(59, 130, 246, 0.3); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1); }
+}
+.button-pulse { animation: glow-pulse 3s infinite ease-in-out; }
+.gradient-blur {
+position: fixed; z-index: 5; inset: auto 0 0 0; height: 15%; pointer-events: none;
+}
+.gradient-blur::after {
+content: ""; position: absolute; inset: 0; z-index: 8; backdrop-filter: blur(40px);
+mask: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+}
+@keyframes beam-spin { to { transform: rotate(360deg); } }
+@keyframes dots-move { 0% { background-position: 0 0; } 100% { background-position: 24px 24px; } }
+/* Modal Transitions */
+.modal-enter { opacity: 0; }
+.modal-enter-active { opacity: 1; transition: opacity 300ms ease-out; }
+.modal-exit { opacity: 1; }
+.modal-exit-active { opacity: 0; transition: opacity 200ms ease-in; }
+.form-expand { transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; }
+.spinner-loader {
+width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-left-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+.modal-toast-state { max-width: 380px !important; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+/* Button States */
+.btn-sending {
+position: relative; overflow: hidden; white-space: nowrap; background-color: transparent !important;
+background-image: linear-gradient(110deg, #2563eb 0%, #3b82f6 25%, #93c5fd 50%, #3b82f6 75%, #2563eb 100%) !important;
+background-size: 300% 100% !important; background-position: 0% 50% !important; animation: btnWaveMove 1.2s linear infinite !important;
+color: white !important; border-color: transparent !important; will-change: background-position;
+}
+@keyframes btnWaveMove { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+.btn-sent { background-color: #10b981 !important; border-color: #059669 !important; color: white !important; }
+.btn-pop { animation: pop-scale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes pop-scale { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+/* Autofill Fix */
+#audit-input-field:-webkit-autofill,
+#audit-input-field:-webkit-autofill:hover,
+#audit-input-field:-webkit-autofill:focus,
+#audit-input-field:-webkit-autofill:active {
+-webkit-box-shadow: 0 0 0 30px #08080A inset !important; -webkit-text-fill-color: white !important; transition: background-color 5000s ease-in-out 0s; caret-color: white !important;
+}
+/* Modal Scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+/* Liquid Glass Modal Specifics */
+.liquid-glass {
+background: rgba(8, 8, 10, 0.65); /* Reduced opacity for better image visibility */
+backdrop-filter: blur(24px);
+-webkit-backdrop-filter: blur(24px);
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.liquid-card {
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+transition: all 0.3s ease;
+}
+.liquid-card:hover {
+background: rgba(255, 255, 255, 0.05);
+border-color: rgba(255, 255, 255, 0.15);
+transform: translateY(-2px);
+}
+/* Updated Liquid Input: Matches Liquid Card Glass Style */
+.liquid-input {
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+transition: all 0.2s ease;
+color: white;
+}
+.liquid-input:focus {
+background: rgba(255, 255, 255, 0.07);
+border-color: rgba(59, 130, 246, 0.5);
+box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+.liquid-input::placeholder {
+color: rgba(209, 213, 219, 0.5); /* Improved contrast against glass */
+}
+/* Enhanced Backdrop Blur for Free Audit Modal */
+#free-audit-backdrop {
+background-color: rgba(0,0,0,0.6);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+}
+/* Close Button Centering Fix */
+#free-audit-close-btn {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 40px;
+height: 40px;
+}
+</style><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">.font-newsreader { font-family: 'Newsreader', serif !important; }</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">.font-oswald { font-family: 'Oswald', sans-serif !important; }</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }</style><link id="all-fonts-link-font-cormorant" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-cormorant">.font-cormorant { font-family: 'Cormorant Garamond', serif !important; }</style></head>
+
+<body class="antialiased selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden relative text-gray-300">
+
+    <!-- Ambient Background Motion -->
+    <div class="fixed top-0 left-0 w-full h-[120vh] overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] mix-blend-screen animate-[ambient-pulse_8s_ease-in-out_infinite]"></div>
+        <div class="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-indigo-900/10 rounded-full blur-[100px] mix-blend-screen animate-[ambient-pulse_10s_ease-in-out_infinite_reverse]"></div>
+    </div>
+
+    <!-- Centered Navbar Container -->
+    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center">
+      <nav class="pointer-events-auto w-full max-w-6xl bg-[#030304]/60 backdrop-blur-xl border border-white/10 rounded-full shadow-lg transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0s_both] animate">
+        <div class="flex h-14 pr-5 pl-5 items-center justify-between">
+          
+          <!-- Left: Logo & Brand Name (Home Link) -->
+          <a href="index.html" class="flex items-center gap-3 group">
+            <div class="flex group-hover:border-blue-500/50 transition-colors duration-300 bg-center -translate-x-2 -translate-x-4 bg-white/5 w-14 h-14 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1f82e3d1-668a-486d-927b-027c70e5d61e_320w.png)] bg-cover border-white/0 border rounded-full relative shadow-[0_0_10px_rgba(0,0,0,0.5)] items-center justify-center">
+              <iconify-icon icon="solar:brain-linear" width="16" height="16" class="text-white group-hover:text-blue-400 transition-colors"></iconify-icon>
+            </div>
+            <span class="text-[15px] group-hover:text-white transition-colors -translate-x-6 text-xl font-medium text-[#BFC9D6]/85 tracking-tight font-space" style="">GDSolutions</span>
+          </a>
+
+          <!-- Right: Links & Contact Button -->
+          <div class="flex items-center gap-6">
+            <a href="services.html" class="hidden md:block text-sm font-medium text-[#BFC9D6]/85 hover:text-white transition-colors font-geist">Services</a>
+            <a href="blog.html" class="hidden md:block text-sm font-medium text-[#BFC9D6]/85 hover:text-white transition-colors font-geist">Blog</a>
+            <button id="nav-contact-btn" type="button" class="group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_-5px_rgba(29,78,216,0.4)] focus:outline-none text-[13px] items-center justify-center text-lg font-medium text-white tracking-wide font-geist h-9 rounded-full px-6 relative cursor-pointer">
+                <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
+                    <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#2563eb_360deg)]" style="animation: beam-spin 3s linear infinite;"></div>
+                    <div class="absolute inset-[1px] rounded-full bg-[#030304]"></div>
+                </div>
+                <div class="-z-10 overflow-hidden bg-[#0a0a0c] rounded-full absolute top-[2px] right-[2px] bottom-[2px] left-[2px]">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-transparent"></div>
+                    <div class="text-xl opacity-30 mix-blend-overlay absolute top-0 right-0 bottom-0 left-0" style="background-image: radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px); background-size: 8px 8px; animation: dots-move 12s linear infinite"></div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-1/2 bg-blue-600/10 blur-xl rounded-full pointer-events-none transition-colors duration-500 group-hover:bg-blue-600/30"></div>
+                </div>
+                <span class="transition-colors group-hover:text-white z-10 text-[#BFC9D6]/90 relative">Contact</span>
+                <iconify-icon icon="solar:arrow-right-linear" width="14" height="14" class="z-10 transition-transform duration-300 group-hover:translate-x-0.5 ml-1.5 relative"></iconify-icon>
+            </button>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+
+    <!-- HERO SECTION (Contains Instant Audit) -->
+    <header class="min-h-[800px] flex flex-col z-0 w-full h-screen relative items-center justify-center">
+      <!-- SPLINE BACKGROUND -->
+      <div class="absolute inset-0 z-0 pointer-events-none opacity-80">
+        <iframe src="https://my.spline.design/orb-VZeSPAmQgHGdWTwgdyiGLAhp/" frameborder="0" width="100%" height="100%" class="w-full h-full border-0" style="filter: brightness(0.6) contrast(1.1) saturate(0.9);"></iframe>
+        <div class="absolute inset-0 bg-gradient-to-b from-[#030304]/80 via-transparent to-[#030304]"></div>
+        <div class="absolute inset-0 bg-[#030304]/40"></div>
+      </div>
+
+      <!-- Hero Content -->
+      <div class="max-w-[1400px] mx-auto px-6 relative z-10 w-full flex flex-col justify-center items-center h-full pointer-events-none text-center">
+        <div class="max-w-4xl mx-auto space-y-8 mt-10">
+          <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both] inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.1)] animate">
+            <span class="w-1.5 h-1.5 rounded-full animate-pulse bg-blue-400"></span>
+            <span class="text-[11px] uppercase font-semibold tracking-widest text-blue-200 font-geist">Websites Evolved With AI</span>
+          </div>
+          <h1 class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both] text-6xl md:text-8xl leading-[0.95] font-semibold text-white font-space tracking-tighter drop-shadow-2xl animate">
+            Build. Automate.
+            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-100 to-white pb-2">
+              Optimize.
+            </span>
+          </h1>
+          <p class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both] text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto font-light text-gray-300 font-geist animate">
+            We modernize your website, optimize it for SEO and conversion, and integrate custom AI agents that automate operations and remove growth bottlenecks.
+          </p>
+
+          <!-- Input/CTA (INSTANT AUDIT - UNTOUCHED) -->
+          <div class="pointer-events-auto animate-on-scroll [animation:animationIn_0.8s_ease-out_0.4s_both] max-w-2xl mx-auto relative mt-12 w-full animate" id="audit-input-container">
+            <div class="-inset-1 bg-gradient-to-r from-blue-600/30 via-indigo-500/30 to-blue-600/30 rounded-full absolute blur-xl opacity-30 animate-pulse"></div>
+            <div class="bg-[#08080A]/80 w-full border border-white/10 rounded-full relative shadow-2xl backdrop-blur-xl overflow-hidden group focus-within:border-blue-500/40 transition-colors duration-300">
+              <input type="text" placeholder="Where are you losing the most customers and time?" class="peer box-border placeholder-gray-500 focus:outline-none disabled:opacity-50 text-lg font-light text-white bg-transparent w-full rounded-full pt-5 pr-[80px] pb-5 pl-8" autocomplete="off" name="audit_issue_no_autofill" id="audit-input-field">
+              <button class="button-pulse -translate-y-1/2 transition-all duration-300 flex hover:scale-105 active:scale-95 disabled:hover:scale-100 disabled:opacity-80 disabled:cursor-not-allowed bg-white/5 backdrop-blur-md border border-white/10 text-white shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:shadow-[0_0_25px_rgba(59,130,246,0.4)] hover:border-blue-400/50 hover:bg-white/10 w-12 h-12 z-10 rounded-full absolute top-1/2 right-2 items-center justify-center" id="audit-submit-btn">
+                <iconify-icon id="btn-icon" icon="solar:arrow-right-linear" width="24" height="24" stroke-width="2" class="text-blue-200"></iconify-icon>
+                <div id="btn-spinner" class="spinner-loader hidden"></div>
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 font-mono text-center opacity-70 mt-5" style="">Describe your challenge for a free website &amp; AI audit.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Down -->
+      <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce z-20 pointer-events-none opacity-40">
+        <iconify-icon icon="solar:mouse-minimalistic-linear" width="24" height="24" class="text-white"></iconify-icon>
+      </div>
+    </header>
+
+    <!-- BENTO GRID SECTION (Animated) -->
+    <section class="py-32 relative z-10 bg-[#030304] border-t border-white/5">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <div class="mb-20 text-center max-w-3xl mx-auto animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both]">
+          <h2 class="text-5xl md:text-6xl font-space font-semibold text-white tracking-tighter mb-6">What We Actually Do</h2>
+          <p class="text-xl md:text-2xl text-gray-400 font-light font-geist">We rebuild your online presence into a growth system.</p>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Website Rebuild -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.12s_both] h-full" style="--mouse-x: -153.20001220703125px; --mouse-y: 616.2000122070312px;">
+            <div class="spotlight-card premium-card h-full p-8 flex flex-col justify-between group cursor-default" style="--mouse-x: -154.20001220703125px; --mouse-y: 615.2000122070312px;">
+              <div class="mb-8 p-3 w-fit rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 group-hover:bg-blue-500/20 group-hover:text-blue-300 transition-colors">
+                <iconify-icon icon="solar:monitor-smartphone-linear" width="28" height="28"></iconify-icon>
+              </div>
+              <div class="">
+                <h3 class="text-2xl text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">Website Rebuild</h3>
+                <p class="leading-relaxed font-light text-gray-400 font-geist">We rebuild your website into a high-performance, modern foundation - engineered for speed, SEO, AI visibility, and real-world conversions.</p>
+              </div>
+            </div>
+          </div>
+          <!-- SEO -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.18s_both] h-full" style="--mouse-x: -610.5250244140625px; --mouse-y: 616.2000122070312px;">
+            <div class="spotlight-card premium-card h-full p-8 flex flex-col justify-between group cursor-default" style="--mouse-x: -611.5250244140625px; --mouse-y: 615.2000122070312px;">
+              <div class="mb-8 p-3 w-fit rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:bg-purple-500/20 group-hover:text-purple-300 transition-colors">
+                <iconify-icon icon="solar:graph-up-linear" width="28" height="28"></iconify-icon>
+              </div>
+              <div class="">
+                <h3 class="text-2xl text-white font-space font-medium mb-3 tracking-tight group-hover:text-purple-200 transition-colors">SEO &amp; Visibility</h3>
+                <p class="leading-relaxed font-light text-gray-400 font-geist">We make sure the right people can actually find you - through technical SEO, clean site structure, and content foundations that grow your visibility over time.</p>
+              </div>
+            </div>
+          </div>
+          <!-- AI Agents -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.24s_both] h-full" style="--mouse-x: -1067.862548828125px; --mouse-y: 616.2000122070312px;">
+            <div class="spotlight-card premium-card h-full p-8 flex flex-col justify-between group cursor-default" style="--mouse-x: -1068.862548828125px; --mouse-y: 615.2000122070312px;">
+              <div class="mb-8 p-3 w-fit rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300 transition-colors">
+                <iconify-icon icon="solar:chat-square-code-linear" width="28" height="28"></iconify-icon>
+              </div>
+              <div class="">
+                <h3 class="text-2xl text-white font-space font-medium mb-3 tracking-tight group-hover:text-emerald-200 transition-colors">AI Agents</h3>
+                <p class="leading-relaxed font-light text-gray-400 font-geist">We build custom AI chat and voice agents that handle inquiries, qualify leads, schedule calls, and support customers - 24/7 without human overhead.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Automation -->
+          <div class="spotlight-wrapper md:col-span-2 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both] h-full" style="--mouse-x: -153.20001220703125px; --mouse-y: 290.20001220703125px;">
+            <div class="spotlight-card premium-card h-full p-8 flex flex-col md:flex-row md:items-center justify-between gap-8 group relative cursor-default" style="--mouse-x: -154.20001220703125px; --mouse-y: 289.20001220703125px;">
+              <div class="relative z-10 max-w-lg">
+                <div class="mb-6 p-3 w-fit rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 group-hover:bg-orange-500/20 group-hover:text-orange-300 transition-colors">
+                  <iconify-icon icon="solar:settings-minimalistic-linear" width="28" height="28"></iconify-icon>
+                </div>
+                <h3 class="group-hover:text-orange-200 transition-colors text-2xl font-medium text-white tracking-tight font-space mb-3">Workflow Automation</h3>
+                <p class="leading-relaxed text-lg font-light text-gray-400 font-geist">We automate repetitive, time-consuming tasks and internal bottlenecks - connecting your tools so your business runs faster, leaner, and with fewer errors.</p>
+              </div>
+              <div class="hidden md:block absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-orange-500/5 to-transparent pointer-events-none"></div>
+            </div>
+          </div>
+          <!-- Conversion -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.36s_both] h-full" style="--mouse-x: -1067.862548828125px; --mouse-y: 290.20001220703125px;">
+            <div class="spotlight-card premium-card h-full p-8 flex flex-col justify-between group cursor-default" style="--mouse-x: -1068.862548828125px; --mouse-y: 289.20001220703125px;">
+               <div class="mb-8 p-3 w-fit rounded-lg bg-pink-500/10 border border-pink-500/20 text-pink-400 group-hover:bg-pink-500/20 group-hover:text-pink-300 transition-colors">
+                <iconify-icon icon="solar:wad-of-money-linear" width="28" height="28"></iconify-icon>
+              </div>
+              <div class="">
+                <h3 class="text-2xl text-white font-space font-medium mb-3 tracking-tight group-hover:text-pink-200 transition-colors">Conversion</h3>
+                <p class="leading-relaxed font-light text-gray-400 font-geist">We design layouts based on proven human psychology - guiding visitors toward action with clear structure, trust signals, and conversion-focused flows.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW SECTION: Pain Points / Validation -->
+    <section class="py-32 relative z-10 bg-[#030304] border-t border-white/5">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <!-- Header -->
+        <div class="mb-20 text-center max-w-3xl mx-auto animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both]">
+          <h2 class="text-4xl md:text-5xl font-space font-semibold text-white tracking-tighter mb-4">Are you here because this feels familiar?</h2>
+          <p class="text-lg text-gray-400 font-light font-geist">If any of these sound like you, you’re not alone - and they’re all fixable.</p>
+        </div>
+
+        <!-- Grid of 6 Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          <!-- Card 1 -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.15s_both]" style="--mouse-x: -153.20001220703125px; --mouse-y: -492.6000061035156px;">
+            <div class="spotlight-card premium-card p-8 h-full flex flex-col group cursor-default" style="--mouse-x: -154.20001220703125px; --mouse-y: -493.6000061035156px;">
+              <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-blue-500/10 group-hover:border-blue-500/20 group-hover:text-blue-400 transition-colors">
+                <iconify-icon icon="solar:history-linear" width="20" height="20" class="" style="color: rgb(96, 165, 250)"></iconify-icon>
+              </div>
+              <h3 class="text-[21px] text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">Your website looks outdated - and you know it’s driving customers away.</h3>
+              <p class="leading-relaxed font-light text-gray-400 font-geist text-[15px]">If your site no longer reflects your business today, it quietly erodes trust. Rebuilding doesn’t mean losing rankings or domains - it means creating a modern foundation that supports growth instead of holding it back.</p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both]" style="--mouse-x: -611.862548828125px; --mouse-y: -492.6000061035156px;">
+            <div class="spotlight-card premium-card p-8 h-full flex flex-col group cursor-default" style="--mouse-x: -612.862548828125px; --mouse-y: -493.6000061035156px;">
+               <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-blue-500/10 group-hover:border-blue-500/20 group-hover:text-blue-400 transition-colors">
+                <iconify-icon icon="solar:users-group-rounded-linear" width="20" height="20"></iconify-icon>
+              </div>
+              <h3 class="text-[21px] text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">Your website looks fine, but it doesn’t turn visitors into enquiries.</h3>
+              <p class="leading-relaxed font-light text-gray-400 font-geist text-[15px]">Conversion isn’t about luck - it’s psychology, structure, and clarity. Small design and messaging changes can remove friction and dramatically improve results without guesswork.</p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.25s_both]" style="--mouse-x: -1070.5250244140625px; --mouse-y: -492.6000061035156px;">
+            <div class="spotlight-card premium-card p-8 h-full flex flex-col group cursor-default" style="--mouse-x: -1071.5250244140625px; --mouse-y: -493.6000061035156px;">
+               <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-blue-500/10 group-hover:border-blue-500/20 group-hover:text-blue-400 transition-colors">
+                <iconify-icon icon="solar:ghost-linear" width="20" height="20"></iconify-icon>
+              </div>
+              <h3 class="text-[21px] text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">Your website is solid, but there’s little to no traffic coming in.</h3>
+              <p class="leading-relaxed font-light text-gray-400 font-geist text-[15px]">A site can look great and still be invisible. If it’s built without proper technical structure and SEO foundations, search engines won’t reward it - no matter how good it appears on the surface.</p>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both]" style="--mouse-x: -153.20001220703125px; --mouse-y: -843.4750366210938px;">
+            <div class="spotlight-card premium-card p-8 h-full flex flex-col group cursor-default" style="--mouse-x: -154.20001220703125px; --mouse-y: -844.4750366210938px;">
+               <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-blue-500/10 group-hover:border-blue-500/20 group-hover:text-blue-400 transition-colors">
+                <iconify-icon icon="solar:stars-minimalistic-linear" width="20" height="20" class=""></iconify-icon>
+              </div>
+              <h3 class="text-[21px] text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">You’ve heard AI should be on your website - but you’re not sure why.</h3>
+              <p class="leading-relaxed font-light text-gray-400 font-geist text-[15px]">AI improves user experience by answering questions instantly, guiding visitors, and removing friction. When your site feels easy to use, people assume working with you will be just as easy.</p>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.35s_both]" style="--mouse-x: -611.862548828125px; --mouse-y: -843.4750366210938px;">
+            <div class="spotlight-card premium-card p-8 h-full flex flex-col group cursor-default" style="--mouse-x: -612.862548828125px; --mouse-y: -844.4750366210938px;">
+               <div class="flex group-hover:bg-blue-500/10 group-hover:border-blue-500/20 group-hover:text-blue-400 transition-colors text-gray-400 bg-white/5 w-10 h-10 border-white/10 border rounded-lg mb-6 items-center justify-center">
+                <iconify-icon icon="solar:sitemap-linear" width="20" height="20"></iconify-icon>
+              <iconify-icon icon="solar:link-circle-outline" width="20" height="20" class="" style="color: rgb(96, 165, 250)"></iconify-icon></div>
+              <h3 class="text-[21px] text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">Should your business really only exist on a single webpage?</h3>
+              <p class="leading-relaxed font-light text-gray-400 font-geist text-[15px]">Search engines reward businesses that are connected, referenced, and visible across the web. Being present in more places builds authority, trust, and discoverability over time.</p>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="spotlight-wrapper animate-on-scroll [animation:animationIn_0.8s_ease-out_0.4s_both]" style="--mouse-x: -1070.5250244140625px; --mouse-y: -843.4750366210938px;">
+            <div class="spotlight-card premium-card p-8 h-full flex flex-col group cursor-default" style="--mouse-x: -1071.5250244140625px; --mouse-y: -844.4750366210938px;">
+               <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 mb-6 group-hover:bg-blue-500/10 group-hover:border-blue-500/20 group-hover:text-blue-400 transition-colors">
+                <iconify-icon icon="solar:clock-circle-linear" width="20" height="20"></iconify-icon>
+              </div>
+              <h3 class="text-[21px] text-white font-space font-medium mb-3 tracking-tight group-hover:text-blue-200 transition-colors">You spend hours every day on repetitive tasks and customer queries.</h3>
+              <p class="leading-relaxed font-light text-gray-400 font-geist text-[15px]">Two hours a day adds up to over 500 hours a year - nearly two full working months. Automating repetitive work frees time for growth while giving customers faster, 24/7 responses.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-col items-center justify-center gap-4 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.45s_both]">
+          <a href="services.html" class="group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_-5px_rgba(29,78,216,0.4)] focus:outline-none text-[15px] items-center justify-center font-medium text-white tracking-wide font-geist h-11 rounded-full px-8 relative cursor-pointer no-underline">
+              <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
+                  <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#2563eb_360deg)]" style="animation: beam-spin 3s linear infinite;"></div>
+                  <div class="absolute inset-[1px] rounded-full bg-[#030304]"></div>
+              </div>
+              <div class="-z-10 overflow-hidden bg-[#0a0a0c] rounded-full absolute top-[2px] right-[2px] bottom-[2px] left-[2px]">
+                  <div class="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-transparent"></div>
+                  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-1/2 bg-blue-600/10 blur-xl rounded-full pointer-events-none transition-colors duration-500 group-hover:bg-blue-600/30"></div>
+              </div>
+              <span class="transition-colors group-hover:text-white z-10 text-white relative">Explore our services</span>
+              <iconify-icon icon="solar:arrow-right-linear" width="16" height="16" class="z-10 transition-transform duration-300 group-hover:translate-x-0.5 ml-2 relative"></iconify-icon>
+          </a>
+          <p class="text-xs text-gray-500 font-geist">See how we address these challenges step by step.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSFORMATION SECTION -->
+    <section class="overflow-hidden bg-[#030304] border-white/5 border-t pt-40 pb-40 relative">
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-l from-blue-900/10 to-transparent rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
+      <div class="max-w-[1400px] mx-auto px-6 relative z-10">
+        <div class="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+          <div class="space-y-8 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both] text-left">
+             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5">
+                <span class="text-xs font-mono text-gray-400">THE SHIFT</span>
+             </div>
+             <h2 class="text-5xl md:text-7xl font-space font-semibold text-white tracking-tighter leading-[1.05]">
+               <span class="block mb-4 md:mb-6">Your online presence shouldn't look <span id="lookWord" class="inline-block min-w-[3ch] transition-all duration-300 text-gray-400">pre-historic</span></span>
+               <span id="generatePhrase" class="block transition-colors duration-300 text-[#3b82f6]">It should generate <span id="genWord" class="inline-block transition-all duration-300">momentum</span></span>
+             </h2>
+             <p class="md:text-2xl leading-relaxed transition-colors duration-300 text-xl font-light text-gray-400 font-geist max-w-xl">We turn outdated websites into intelligent growth systems - optimized for SEO, engineered for performance, and powered by AI.</p>
+          </div>
+
+          <div class="flex flex-col gap-4 relative z-20">
+            <!-- Pills -->
+            <div class="group trans-pill p-5 rounded-2xl bg-[#08080A] border border-white/5 cursor-pointer animate-on-scroll [animation:animationIn_0.8s_ease-out_0.15s_both]" data-accent="#60a5fa" data-genword="visibility">
+              <div class="flex items-center gap-5">
+                <div class="hollow-pill w-1.5 h-10 rounded-full border border-gray-600 group-hover:border-blue-400/0 text-blue-400"></div>
+                <div><h3 class="text-xl text-white font-space font-medium group-hover:text-blue-200 transition-colors">More Visibility</h3><p class="text-gray-500 text-sm font-geist font-light mt-0.5 group-hover:text-gray-400">Dominating search results with technical SEO.</p></div>
+              </div>
+            </div>
+            <div class="group trans-pill p-5 rounded-2xl bg-[#08080A] border border-white/5 cursor-pointer animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both]" data-accent="#a855f7" data-genword="leads">
+              <div class="flex items-center gap-5">
+                <div class="hollow-pill w-1.5 h-10 rounded-full border border-gray-600 group-hover:border-purple-400/0 text-purple-400"></div>
+                <div><h3 class="text-xl text-white font-space font-medium group-hover:text-purple-200 transition-colors">Inbound Leads</h3><p class="text-gray-500 text-sm font-geist font-light mt-0.5 group-hover:text-gray-400">Visitors that convert into booked meetings.</p></div>
+              </div>
+            </div>
+            <div class="group trans-pill p-5 rounded-2xl bg-[#08080A] border border-white/5 cursor-pointer animate-on-scroll [animation:animationIn_0.8s_ease-out_0.25s_both]" data-accent="#10b981" data-genword="time">
+              <div class="flex items-center gap-5">
+                <div class="hollow-pill w-1.5 h-10 rounded-full border border-gray-600 group-hover:border-emerald-400/0 text-emerald-400"></div>
+                <div><h3 class="text-xl text-white font-space font-medium group-hover:text-emerald-200 transition-colors">Less Manual Work</h3><p class="text-gray-500 text-sm font-geist font-light mt-0.5 group-hover:text-gray-400">AI agents handling repetitive tasks 24/7.</p></div>
+              </div>
+            </div>
+            <div class="group trans-pill p-5 rounded-2xl bg-[#08080A] border border-white/5 cursor-pointer animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both]" data-accent="#f97316" data-genword="momentum">
+              <div class="flex items-center gap-5">
+                <div class="hollow-pill w-1.5 h-10 rounded-full border border-gray-600 group-hover:border-orange-400/0 text-orange-400"></div>
+                <div><h3 class="text-xl text-white font-space font-medium group-hover:text-orange-200 transition-colors">Faster Growth</h3><p class="text-gray-500 text-sm font-geist font-light mt-0.5 group-hover:text-gray-400">A system that scales without breaking.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORE PILLARS -->
+    <section class="z-10 bg-[#030304] border-white/5 border-t pt-32 pr-6 pb-32 pl-6 relative">
+      <div class="z-10 max-w-[1400px] mr-auto ml-auto relative">
+        <div class="mb-16 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both]">
+           <h2 class="text-4xl md:text-5xl text-white font-space font-semibold tracking-tight">Core Pillars</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8">
+          <!-- Pillar 1 -->
+          <div class="flip-group animate-on-scroll [animation:animationIn_0.8s_ease-out_0.12s_both] cursor-pointer w-full h-[480px]">
+            <div class="flip-inner shadow-2xl">
+              <div class="flip-front p-10">
+                 <div class="absolute bottom-6 right-6 opacity-30 text-white font-space font-bold text-6xl tracking-tighter">01</div>
+                 <div class="mb-8 w-16 h-16 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                    <iconify-icon icon="solar:server-square-linear" width="32" height="32"></iconify-icon>
+                 </div>
+                 <h3 class="text-3xl text-white font-space font-semibold tracking-tight text-center">Modern Infrastructure</h3>
+              </div>
+              <div class="flip-back">
+                <h3 class="text-2xl font-medium text-blue-400 font-space mb-4">01. Architecture</h3>
+                <p class="leading-relaxed text-lg font-light text-gray-300 font-geist">Engineered for fast load times, clean structure, and seamless mobile performance.</p>
+                <div class="flex gap-2 text-sm text-gray-500 font-mono border-white/10 border-t mt-8 pt-8 items-center"><iconify-icon icon="solar:check-circle-linear" class="text-green-500"></iconify-icon> Next.js / Tailwind</div>
+              </div>
+            </div>
+          </div>
+          <!-- Pillar 2 -->
+          <div class="h-[480px] w-full flip-group animate-on-scroll [animation:animationIn_0.8s_ease-out_0.18s_both] cursor-pointer">
+            <div class="flip-inner shadow-2xl">
+              <div class="flip-front p-10">
+                 <div class="absolute bottom-6 right-6 opacity-30 text-white font-space font-bold text-6xl tracking-tighter">02</div>
+                 <div class="mb-8 w-16 h-16 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                    <iconify-icon icon="solar:user-circle-linear" width="32" height="32"></iconify-icon>
+                 </div>
+                 <h3 class="text-3xl text-white font-space font-semibold tracking-tight text-center">Frictionless CX</h3>
+              </div>
+              <div class="flip-back">
+                <h3 class="text-2xl text-purple-400 font-space font-medium mb-4">02. Experience</h3>
+                <p class="leading-relaxed text-lg font-light text-gray-300 font-geist">User journeys shouldn't have dead ends. We implement predictive navigation and instant search to guide visitors to conversion points effortlessly.</p>
+                <div class="flex gap-2 text-sm text-gray-500 font-mono border-white/10 border-t mt-8 pt-8 items-center"><iconify-icon icon="solar:check-circle-linear" class="text-green-500"></iconify-icon> UI/UX Optimization</div>
+              </div>
+            </div>
+          </div>
+          <!-- Pillar 3 -->
+          <div class="h-[480px] w-full flip-group animate-on-scroll [animation:animationIn_0.8s_ease-out_0.24s_both] cursor-pointer">
+            <div class="flip-inner shadow-2xl">
+              <div class="flip-front p-10">
+                 <div class="absolute bottom-6 right-6 opacity-30 text-white font-space font-bold text-6xl tracking-tighter">03</div>
+                 <div class="mb-8 w-16 h-16 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <iconify-icon icon="solar:cpu-bolt-linear" width="32" height="32"></iconify-icon>
+                 </div>
+                 <h3 class="text-3xl text-white font-space font-semibold tracking-tight text-center">AI Automation</h3>
+              </div>
+              <div class="flip-back">
+                <h3 class="text-2xl text-emerald-400 font-space font-medium mb-4">03. Autonomy</h3>
+                <p class="leading-relaxed text-lg font-light text-gray-300 font-geist">We code AI agents tailored to your business logic. They handle the "busy work" - scheduling, qualification, and FAQ - so you sleep while they work.</p>
+                <div class="mt-8 pt-8 border-t border-white/10 flex items-center gap-2 text-sm text-gray-500 font-mono"><iconify-icon icon="solar:check-circle-linear" class="text-green-500"></iconify-icon> Custom LLM Integration</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer / CTA -->
+    <section id="contact-section" class="py-40 relative z-10 border-t border-white/5 overflow-hidden bg-[#020203]">
+      <div class="absolute inset-0 bg-gradient-to-t from-blue-900/5 via-transparent to-transparent pointer-events-none"></div>
+      <div class="max-w-5xl mx-auto px-6 relative z-10 text-center animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both]">
+        <h2 class="text-5xl md:text-7xl text-white font-space font-semibold tracking-tighter mb-8 drop-shadow-2xl">
+          Turn Your Online Presence Into an
+          <span class="block animate-color-cycle">Intelligent Asset</span>
+        </h2>
+        <p class="text-2xl font-light text-gray-400 font-geist max-w-2xl mx-auto mb-12 leading-relaxed">
+          Get a free audit of your website, SEO, and AI automation opportunities. See exactly where you are losing revenue.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <button id="cta-contact-btn" type="button" class="group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_40px_-5px_rgba(29,78,216,0.5)] focus:outline-none text-lg font-medium text-white tracking-wide font-geist rounded-full h-14 px-8 relative items-center justify-center cursor-pointer">
+                <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
+                    <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#2563eb_360deg)]" style="animation: beam-spin 3s linear infinite;"></div>
+                    <div class="absolute inset-[1px] rounded-full bg-[#030304]"></div>
+                </div>
+                <div class="-z-10 overflow-hidden bg-[#0a0a0c] rounded-full absolute top-[2px] right-[2px] bottom-[2px] left-[2px]">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent"></div>
+                    <div class="opacity-30 mix-blend-overlay absolute top-0 right-0 bottom-0 left-0" style="background-image: radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px); background-size: 8px 8px; animation: dots-move 12s linear infinite"></div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-1/2 bg-blue-600/20 blur-xl rounded-full pointer-events-none transition-colors duration-500 group-hover:bg-blue-600/40"></div>
+                </div>
+                <span class="relative z-10 text-white/90 transition-colors group-hover:text-white">Get My Free Audit</span>
+                <iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="relative z-10 ml-2 transition-transform duration-300 group-hover:translate-x-0.5"></iconify-icon>
+            </button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- FOOTER -->
+    <footer class="relative z-10 border-t border-white/5 bg-[#030304]/80 backdrop-blur-md">
+      <div class="max-w-[1400px] mx-auto px-6 py-12 md:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 justify-between">
+          <div class="flex flex-col gap-6 max-w-sm">
+             <div class="flex items-center gap-3">
+               <div class="flex bg-white/5 w-8 h-8 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c2e5aa16-af68-43f6-8a8d-36e4d032b29d_320w.png)] bg-cover bg-center border-white/50 border rounded-full items-center justify-center">
+                  <iconify-icon icon="solar:brain-linear" width="16" height="16" class="text-white"></iconify-icon>
+               </div>
+               <span class="text-xl font-medium font-space text-white tracking-tight">GDSolutions.ai</span>
+             </div>
+             <p class="leading-relaxed text-sm text-gray-400 font-geist">Websites evolved with AI - online presence, SEO, and automation that drives revenue.</p>
+             <div class="text-sm text-gray-400 font-geist">
+                Support: <a href="mailto:support@gdsolutions.ai" class="hover:text-white transition-colors">support@gdsolutions.ai</a>
+             </div>
+             <p class="text-xs text-gray-600 font-mono mt-2">© 2024 GDSolutions.ai. All rights reserved.</p>
+          </div>
+          <div class="flex flex-col md:items-end gap-6">
+             <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium font-geist text-gray-400">
+               <a href="index.html" class="hover:text-white transition-colors">Home</a>
+               <a href="services.html" class="hover:text-white transition-colors">Services</a>
+               <a href="blog.html" class="hover:text-white transition-colors">Blog</a>
+               <a href="https://www.linkedin.com/company/gdsolutions-ai/" target="_blank" class="hover:text-white transition-colors">LinkedIn</a>
+               <a href="#" class="hover:text-white transition-colors">Terms</a>
+               <a href="#" class="hover:text-white transition-colors">Privacy</a>
+             </div>
+             <a href="#" class="hidden md:inline-flex items-center gap-2 text-xs text-gray-600 hover:text-white transition-colors group">
+               Back to top <iconify-icon icon="solar:arrow-up-linear" class="group-hover:-translate-y-0.5 transition-transform"></iconify-icon>
+             </a>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-white/5 flex flex-col gap-2 text-[10px] md:text-[11px] text-gray-600 font-geist leading-relaxed opacity-60">
+           <p>Information on this site is for general purposes only and does not constitute legal, financial, or professional advice.</p>
+           <p>Results may vary depending on industry, website condition, and implementation scope.</p>
+           <p>Third-party names and logos are the property of their respective owners.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Gradient Blur -->
+    <div class="gradient-blur"></div>
+
+    <!-- 1. INSTANT AUDIT MODAL (Maintained for Hero - NO CHANGES) -->
+    <div id="audit-modal" class="hidden fixed inset-0 z-[100]" role="dialog" aria-modal="true">
+        <div id="modal-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity"></div>
+        <div id="modal-wrapper" class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg p-4 transition-all duration-500">
+            <div class="bg-[#08080A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
+                <div class="flex items-center justify-between p-6 border-b border-white/5">
+                    <h3 class="text-xl font-space font-medium text-white tracking-tight">Your Instant Audit</h3>
+                    <button id="modal-close-btn" class="text-gray-500 hover:text-white transition-colors">
+                        <iconify-icon icon="solar:close-circle-linear" width="24" height="24"></iconify-icon>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto custom-scrollbar">
+                    <div id="modal-response-content" class="text-gray-300 font-geist font-light leading-relaxed text-base space-y-4"></div>
+                    <div id="modal-error-code" class="hidden justify-end mt-4">
+                        <span class="text-[10px] font-mono text-red-500/50 border border-red-500/10 px-2 py-1 rounded bg-red-500/5 uppercase"></span>
+                    </div>
+                    <div id="modal-action-area" class="mt-8 pt-6 border-t border-white/5">
+                        <button id="modal-morph-trigger" class="w-full flex items-center justify-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600/20 hover:text-blue-300 transition-all rounded-lg py-3 px-4 font-medium text-sm font-geist group">
+                            <iconify-icon icon="solar:letter-linear" width="18" height="18"></iconify-icon>
+                            Email me a detailed report
+                        </button>
+                        <div id="modal-report-form" class="hidden opacity-0 max-h-0 overflow-hidden form-expand">
+                            <div class="pt-4 space-y-4">
+                                <div><label class="block text-xs font-mono text-gray-500 mb-1.5 uppercase">Full Name</label><input type="text" id="report-name" class="w-full bg-[#030304] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors" placeholder="John Doe"></div>
+                                <div><label class="block text-xs font-mono text-gray-500 mb-1.5 uppercase">Business Email</label><input type="email" id="report-email" class="w-full bg-[#030304] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors" placeholder="john@company.com"></div>
+                                <button id="report-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-2.5 text-sm font-medium transition-colors shadow-lg shadow-blue-900/20">Send my report</button>
+                                <p id="report-success-note" class="hidden text-sm text-center text-white/70 mt-3 font-geist">Keep an eye on your inbox</p>
+                                <p id="report-status" class="text-xs text-center text-gray-500 h-4"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. FREE AUDIT / CONTACT MODAL (VISUAL UPDATE: DIMMED BG + AUTOCOMPLETE OFF) -->
+    <div id="free-audit-modal" class="hidden fixed inset-0 z-[110]" role="dialog" aria-modal="true">
+        <!-- Backdrop with Strong Blur -->
+        <div id="free-audit-backdrop" class="fixed inset-0 transition-opacity"></div>
+
+        <!-- Modal Container (Liquid Glass) - Ensure Centering -->
+        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl p-4 max-h-[95vh] overflow-y-auto custom-scrollbar">
+            <div class="liquid-glass rounded-3xl relative overflow-hidden">
+                <!-- Background Layers for Depth - MODIFIED: Dimmer (Opacity 0.3, Brightness 50) -->
+                <div class="absolute inset-0 -z-20 bg-[url('https://wdfrapvhdrijkdmupvsq.supabase.co/storage/v1/object/public/public_assets/Globe-at-night')] bg-cover bg-center opacity-35 mix-blend-normal pointer-events-none brightness-50"></div>
+                <!-- Gradient Overlay -->
+                <div class="absolute inset-0 -z-10 bg-gradient-to-br from-black/40 to-transparent pointer-events-none"></div>
+
+                <!-- Close Button (Centered) -->
+                <button id="free-audit-close-btn" class="absolute top-5 right-5 z-30 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 border border-white/5 rounded-full backdrop-blur-md">
+                    <iconify-icon icon="solar:close-circle-linear" width="24" height="24"></iconify-icon>
+                </button>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-0">
+                    
+                    <!-- Left Column: Form (Approx 60-65% width) - Layout Maintained -->
+                    <div class="md:col-span-8 p-10 md:p-12 relative z-10">
+                        <h3 class="text-3xl font-space font-semibold text-white mb-3 tracking-tight">Let's Work Together</h3>
+                        <p class="text-gray-400 font-geist font-light text-sm mb-10 max-w-lg leading-relaxed">We’ll identify what’s holding your growth back, strengthen the areas where you’re underperforming, and highlight opportunities you may have overlooked.</p>
+                        
+                        <!-- UPDATED FORM: autocomplete=off, inputmode, spellcheck=false -->
+                        <form id="free-audit-form" class="space-y-6" autocomplete="off">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Name <span class="text-blue-500">*</span></label>
+                                    <input type="text" id="free-audit-name" required="" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="John Doe" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Email <span class="text-blue-500">*</span></label>
+                                    <input type="email" id="free-audit-email" required="" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="john@company.com" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="email">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Website (Highly Suggested)</label>
+                                    <input type="url" id="free-audit-website" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="https://example.com" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Phone</label>
+                                    <input type="tel" id="free-audit-phone" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="+27 82 123 4567" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="tel">
+                                </div>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">What issues are you facing? <span class="text-blue-500">*</span></label>
+                                <textarea id="free-audit-issue" required="" rows="3" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none resize-none" placeholder="Where are you losing the most customers, wasting the most time, or what issues do you want to address?" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="button" id="free-audit-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-4 text-sm font-medium transition-all shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2 group cursor-pointer hover:-translate-y-0.5">
+                                    <span>Submit</span>
+                                    <iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                                </button>
+                                <p id="free-audit-status-msg" class="text-center text-xs text-emerald-400 mt-4 font-mono h-4"></p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: Modified Stacked Cards - Layout Adjusted for Alignment -->
+                    <!-- Added 'flex flex-col justify-start' and 'md:pt-[8.5rem]' to wrapper to align with input row -->
+                    <div class="md:col-span-4 p-10 md:p-12 md:pl-0 relative z-10 flex flex-col justify-start">
+                        <div class="flex flex-col gap-3 w-full md:mt-[8.5rem]">
+                            <!-- Email Card (Reduced Size) -->
+                            <div class="liquid-card rounded-xl p-4 w-full h-auto flex flex-col justify-center group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-110 transition-transform duration-300 group-hover:bg-blue-500/10 group-hover:border-blue-500/20">
+                                        <iconify-icon icon="solar:letter-linear" width="20" height="20"></iconify-icon>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h4 class="text-white font-medium font-space text-base">Email</h4>
+                                        <a href="mailto:support@gdsolutions.ai" class="text-gray-400 text-sm mt-0.5 block hover:text-white transition-colors truncate font-geist">support@gdsolutions.ai</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Follow Us Card (Reduced Size, Smaller Icon) -->
+                            <div class="liquid-card rounded-xl p-4 w-full h-auto flex flex-col justify-center group">
+                                <h4 class="text-white font-medium font-space text-base mb-2">Follow Us</h4>
+                                <div class="flex gap-3">
+                                    <a href="https://www.linkedin.com/company/gdsolutions-ai/?viewAsMember=true" target="_blank" class="w-8 h-8 rounded-lg bg-[#0077b5] flex items-center justify-center text-white shadow-lg hover:shadow-[#0077b5]/40 hover:scale-105 transition-all duration-300">
+                                        <iconify-icon icon="ri:linkedin-fill" width="16" height="16"></iconify-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    
+
+    <!-- Logic -->
+    <script>
+      /* Flashlight/Spotlight Effect */
+      document.addEventListener('mousemove', e => {
+        document.querySelectorAll('.spotlight-card, .spotlight-wrapper').forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+        });
+      });
+
+      /* IIFE to encapsulate Logic */
+      (function() {
+          // Aura guard: prevent script from executing twice
+          if (window.__GDS_MODAL_SCRIPT_LOADED__) return;
+          window.__GDS_MODAL_SCRIPT_LOADED__ = true;
+        window.__auditState = { issue: "", instant_result: "", session_id: "", created_at: null };
+        const WEBHOOKS = {
+        INSTANT: "https://gdsolutions96.app.n8n.cloud/webhook/instant-audit",
+        DETAILED: "https://gdsolutions96.app.n8n.cloud/webhook/detailed-report",
+        FREE_AUDIT: "https://gdsolutions96.app.n8n.cloud/webhook/free-audit-button"
+      };
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // ==========================================
+            // 1. INSTANT AUDIT LOGIC (UNTOUCHED)
+            // ==========================================
+            const inputField = document.getElementById('audit-input-field');
+            const submitBtn = document.getElementById('audit-submit-btn');
+            const btnIcon = document.getElementById('btn-icon');
+            const btnSpinner = document.getElementById('btn-spinner');
+            
+            // Instant Audit Modal
+            const modal = document.getElementById('audit-modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalContent = document.getElementById('modal-response-content');
+            const modalActionArea = document.getElementById('modal-action-area');
+            const modalErrorCode = document.getElementById('modal-error-code');
+            const morphTrigger = document.getElementById('modal-morph-trigger');
+            const reportForm = document.getElementById('modal-report-form');
+            const reportName = document.getElementById('report-name');
+            const reportEmail = document.getElementById('report-email');
+            const reportSubmitBtn = document.getElementById('report-submit-btn');
+            const reportStatus = document.getElementById('report-status');
+            const reportSuccessNote = document.getElementById('report-success-note');
+
+            const handleInstantAudit = async () => {
+                const issue = inputField.value.trim();
+                if (!issue) {
+                    inputField.parentElement.classList.add('translate-x-1');
+                    setTimeout(() => inputField.parentElement.classList.remove('translate-x-1'), 200);
+                    return;
+                }
+                inputField.disabled = true;
+                submitBtn.disabled = true;
+                submitBtn.classList.add('pointer-events-none', 'opacity-80');
+                submitBtn.classList.remove('button-pulse');
+                btnIcon.classList.add('hidden');
+                btnSpinner.classList.remove('hidden');
+
+                try {
+                    const response = await fetch(WEBHOOKS.INSTANT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            issue: issue,
+                            page_url: window.location.href,
+                            referrer: document.referrer || "",
+                            user_agent: navigator.userAgent,
+                            timestamp: new Date().toISOString(),
+                            source: "hero_instant_audit"
+                        })
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP_${response.status}`);
+
+                    let resultText = "Analysis complete.";
+                    let sessionId = "";
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        const data = await response.json();
+                        resultText = data.message || data.result || data.summary || JSON.stringify(data);
+                        sessionId = data.session_id || "";
+                    } else {
+                        resultText = await response.text();
+                    }
+                    window.__auditState = { issue, instant_result: resultText, session_id: sessionId, created_at: new Date() };
+                    openInstantModal(resultText, false);
+
+                } catch (error) {
+                    console.error("Audit Error:", error);
+                    let errCode = "ERR_AUDIT_NET";
+                    if (error.message.startsWith("HTTP_")) errCode = `ERR_AUDIT_${error.message}`;
+                    openInstantModal("Unfortunately we couldn’t complete the audit right now. Please try again.", true, errCode);
+                } finally {
+                    inputField.disabled = false;
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('pointer-events-none', 'opacity-80');
+                    btnIcon.classList.remove('hidden');
+                    btnSpinner.classList.add('hidden');
+                    submitBtn.classList.add('button-pulse');
+                    inputField.value = "";
+                }
+            };
+            
+            // Wiring Instant Audit
+            if(submitBtn) submitBtn.addEventListener('click', handleInstantAudit);
+            if(inputField) inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleInstantAudit(); });
+
+// =====================================
+// FREE AUDIT SUBMIT (MODIFIED: VISUAL ANIMATION)
+// =====================================
+const freeAuditSubmitBtn = document.getElementById('free-audit-submit-btn');
+
+if (freeAuditSubmitBtn) {
+  freeAuditSubmitBtn.addEventListener('click', async () => {
+
+    const payload = {
+      full_name: document.getElementById('free-audit-name')?.value.trim(),
+      email: document.getElementById('free-audit-email')?.value.trim(),
+      website: document.getElementById('free-audit-website')?.value.trim(),
+      phone: document.getElementById('free-audit-phone')?.value.trim(),
+      issue: document.getElementById('free-audit-issue')?.value.trim(),
+      page_url: window.location.href,
+      source: 'free_audit_modal',
+      timestamp: new Date().toISOString()
+    };
+
+    // VISUAL STATE: Start "Sending"
+    freeAuditSubmitBtn.disabled = true;
+    freeAuditSubmitBtn.textContent = "Sending...";
+    freeAuditSubmitBtn.classList.add('btn-sending'); // Adds the blue gradient wave animation
+
+    // Fetch Logic (Untouched)
+    fetch(WEBHOOKS.FREE_AUDIT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    // VISUAL STATE: Delayed Success
+    setTimeout(() => {
+        freeAuditSubmitBtn.classList.remove('btn-sending');
+        freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
+        freeAuditSubmitBtn.textContent = "Sent ✓";
+    }, 4000); // Hard-coded 4s delay
+
+  });
+}
+
+            const openInstantModal = (content, isError, errorCode = "") => {
+                document.getElementById('modal-wrapper').classList.remove('modal-toast-state');
+                modalActionArea.style.display = "block";
+                modalContent.innerHTML = content.trim().startsWith('<') ? content : `<p>${content}</p>`;
+
+                if (isError) {
+                    modalActionArea.style.display = "none";
+                    modalErrorCode.classList.remove('hidden');
+                    modalErrorCode.classList.add('flex');
+                    modalErrorCode.querySelector('span').textContent = errorCode;
+                } else {
+                    modalActionArea.style.display = "block";
+                    modalErrorCode.classList.add('hidden');
+                    modalErrorCode.classList.remove('flex');
+                    morphTrigger.style.display = "flex";
+                    reportForm.classList.add('hidden', 'opacity-0', 'max-h-0');
+                    reportForm.classList.remove('block', 'opacity-100', 'max-h-[300px]');
+                    reportName.value = "";
+                    reportEmail.value = "";
+                    reportStatus.textContent = "";
+                    reportSubmitBtn.disabled = false;
+                    if(reportSuccessNote) reportSuccessNote.classList.add('hidden');
+                    reportSubmitBtn.classList.remove('btn-sending', 'btn-sent', 'btn-pop');
+                    reportSubmitBtn.textContent = "Send my report";
+                    reportName.parentElement.style.display = 'block';
+                    reportEmail.parentElement.style.display = 'block';
+                }
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            };
+            
+            const closeInstantModal = () => { modal.classList.add('hidden'); document.body.style.overflow = ''; };
+            if(modalCloseBtn) modalCloseBtn.addEventListener('click', closeInstantModal);
+            if(modalBackdrop) modalBackdrop.addEventListener('click', closeInstantModal);
+            
+            // Detailed Report Logic
+            if(morphTrigger) morphTrigger.addEventListener('click', () => {
+                morphTrigger.style.display = "none";
+                reportForm.classList.remove('hidden');
+                void reportForm.offsetWidth;
+                reportForm.classList.remove('opacity-0', 'max-h-0');
+                reportForm.classList.add('opacity-100', 'max-h-[300px]');
+                reportName.focus();
+            });
+
+            if(reportSubmitBtn) reportSubmitBtn.addEventListener('click', () => {
+                const name = reportName.value.trim();
+                const email = reportEmail.value.trim();
+                if (!name || !email || !email.includes('@')) {
+                    reportStatus.textContent = "Please enter a valid name and email.";
+                    reportStatus.classList.add('text-red-500');
+                    return;
+                }
+                reportSubmitBtn.disabled = true;
+                reportStatus.textContent = "";
+                reportSubmitBtn.textContent = "Sending";
+                reportSubmitBtn.classList.add('btn-sending');
+                fetch(WEBHOOKS.DETAILED, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, email, issue: window.__auditState.issue,
+                        instant_result: window.__auditState.instant_result,
+                        session_id: window.__auditState.session_id,
+                        page_url: window.location.href,
+                        timestamp: new Date().toISOString(),
+                        source: "modal_detailed_report"
+                    }),
+                })
+                .then(res => { if(!res.ok) console.error("Webhook error status:", res.status); })
+                .catch(err => console.error("Webhook network error:", err));
+
+                setTimeout(() => {
+                    reportSubmitBtn.classList.remove('btn-sending');
+                    reportSubmitBtn.classList.add('btn-sent', 'btn-pop');
+                    reportSubmitBtn.textContent = "Sent ✓";
+                    if(reportSuccessNote) reportSuccessNote.classList.remove('hidden');
+                    reportName.parentElement.style.display = 'none';
+                    reportEmail.parentElement.style.display = 'none';
+                }, 4000);
+            });
+
+            // ==========================================
+            // 2. FREE AUDIT / CONTACT MODAL LOGIC (FIXED)
+            // ==========================================
+            const freeAuditModal = document.getElementById('free-audit-modal');
+            const freeAuditBackdrop = document.getElementById('free-audit-backdrop');
+            const freeAuditCloseBtn = document.getElementById('free-audit-close-btn');
+            const navContactBtn = document.getElementById('nav-contact-btn');
+            const ctaContactBtn = document.getElementById('cta-contact-btn');
+            const freeAuditForm = document.getElementById('free-audit-form');
+            const freeAuditStatusMsg = document.getElementById('free-audit-status-msg');
+
+            const openFreeAudit = () => {
+                if(!freeAuditModal) return;
+                freeAuditModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                // Reset form state on open
+                if(freeAuditForm) freeAuditForm.reset();
+                if(freeAuditStatusMsg) freeAuditStatusMsg.textContent = "";
+                const btn = document.getElementById('free-audit-submit-btn');
+                if(btn) {
+                    btn.disabled = false;
+                    btn.textContent = ""; // Clear pure text content to allow HTML innerHTML reset
+                    btn.classList.remove('btn-sending', 'btn-sent', 'btn-pop'); // Remove state classes
+                    btn.innerHTML = `<span>Submit</span><iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="group-hover:translate-x-1 transition-transform"></iconify-icon>`;
+                    btn.className = "w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-4 text-sm font-medium transition-all shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2 group cursor-pointer hover:-translate-y-0.5";
+                }
+            };
+
+            const closeFreeAudit = () => {
+                if(!freeAuditModal) return;
+                freeAuditModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            };
+
+            // Wiring Open/Close
+            if(navContactBtn) navContactBtn.addEventListener('click', openFreeAudit);
+            if(ctaContactBtn) ctaContactBtn.addEventListener('click', openFreeAudit);
+            if(freeAuditCloseBtn) freeAuditCloseBtn.addEventListener('click', closeFreeAudit);
+            if(freeAuditBackdrop) freeAuditBackdrop.addEventListener('click', closeFreeAudit);
+
+            // Escape Key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!freeAuditModal.classList.contains('hidden')) closeFreeAudit();
+                    if (!modal.classList.contains('hidden')) closeInstantModal();
+                }
+            });
+
+            /* --- DYNAMIC TEXT ROTATION (Hero) --- */
+            const lookSpan = document.getElementById('lookWord');
+            const genPhrase = document.getElementById('generatePhrase');
+            const genSpan = document.getElementById('genWord');
+            if(lookSpan && genSpan) {
+                const lookWords = ["outdated", "old", "pre-historic", "terrible"];
+                const genWords = ["revenue", "leads", "clients", "momentum"];
+                let lookIndex = 0; let genIndex = 0; let intervalId = null;
+
+                const updateText = (element, newText) => {
+                  element.style.filter = "blur(8px)"; element.style.opacity = "0.5";
+                  setTimeout(() => { element.innerText = newText; element.style.filter = "blur(0px)"; element.style.opacity = "1"; }, 200);
+                };
+                const startLoop = () => {
+                  intervalId = setInterval(() => {
+                    lookIndex = (lookIndex + 1) % lookWords.length;
+                    genIndex = (genIndex + 1) % genWords.length;
+                    updateText(lookSpan, lookWords[lookIndex]);
+                    updateText(genSpan, genWords[genIndex]);
+                  }, 2000);
+                };
+                const stopLoop = () => { if (intervalId) clearInterval(intervalId); };
+                startLoop();
+
+                document.querySelectorAll('.trans-pill').forEach(pill => {
+                  pill.addEventListener('mouseenter', () => {
+                     stopLoop();
+                     const accent = pill.getAttribute('data-accent');
+                     const word = pill.getAttribute('data-genword');
+                     genPhrase.style.color = accent;
+                     updateText(genSpan, word);
+                  });
+                  pill.addEventListener('mouseleave', () => {
+                     genPhrase.style.color = "#3b82f6";
+                     startLoop();
+                  });
+                });
+            }
+        });
+      })();
+    </script>
+</div></body></html>
