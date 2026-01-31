@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog | GDSolutions.ai</title>
+<!-- Scripts -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- AURA: Scroll Animation Logic -->
+<script>
+(function () {
+const style = document.createElement("style");
+style.textContent = `
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+`;
+document.head.appendChild(style);
+const once = true;
+if (!window.__inViewIO) {
+window.__inViewIO = new IntersectionObserver((entries) => {
+entries.forEach((entry) => {
+if (entry.isIntersecting) {
+entry.target.classList.add("animate");
+if (once) window.__inViewIO.unobserve(entry.target);
+}
+});
+}, { threshold: 0.15, rootMargin: "0px 0px -5% 0px" });
+}
+window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+document.querySelectorAll(selector).forEach((el) => {
+window.__inViewIO.observe(el);
+});
+};
+document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+})();
+</script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+/* Base Settings */
+body { font-family: 'Inter', sans-serif; background-color: #030304; color: #d1d5db; overflow-x: hidden; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-space { font-family: 'Space Grotesk', sans-serif; }
+.font-geist { font-family: 'Geist', sans-serif; }
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #030304; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+/* --- AURA: Blur In Animation Keyframes --- */
+@keyframes animationIn {
+0% { opacity: 0.08; filter: blur(14px); transform: translateY(18px); }
+100% { opacity: 1; filter: blur(0px); transform: translateY(0); }
+}
+/* --- Premium Hover Effects --- */
+.premium-card {
+transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+border-color 0.4s ease;
+}
+.premium-card:hover {
+transform: scale(1.01);
+box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5), 0 0 30px rgba(59, 130, 246, 0.1);
+border-color: rgba(59, 130, 246, 0.25);
+z-index: 10;
+}
+/* Liquid Glass Style */
+.liquid-glass {
+background: rgba(8, 8, 10, 0.65);
+backdrop-filter: blur(24px);
+-webkit-backdrop-filter: blur(24px);
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.liquid-card {
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+transition: all 0.3s ease;
+}
+/* Blog specific hover glow */
+.liquid-card.blog-card:hover {
+background: rgba(255, 255, 255, 0.05);
+border-color: rgba(59, 130, 246, 0.3);
+transform: translateY(-2px);
+box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+}
+.liquid-input {
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+transition: all 0.2s ease;
+color: white;
+}
+.liquid-input:focus {
+background: rgba(255, 255, 255, 0.07);
+border-color: rgba(59, 130, 246, 0.5);
+box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+.liquid-input::placeholder {
+color: rgba(209, 213, 219, 0.5);
+}
+/* Animations */
+@keyframes beam-spin { to { transform: rotate(360deg); } }
+@keyframes dots-move { 0% { background-position: 0 0; } 100% { background-position: 24px 24px; } }
+@keyframes ambient-pulse {
+0% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0.15; } 100% { transform: scale(1); opacity: 0.3; }
+}
+.gradient-blur {
+position: fixed; z-index: 5; inset: auto 0 0 0; height: 15%; pointer-events: none;
+}
+.gradient-blur::after {
+content: ""; position: absolute; inset: 0; z-index: 8; backdrop-filter: blur(40px);
+mask: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+}
+/* Modal Specifics */
+#free-audit-backdrop {
+background-color: rgba(0,0,0,0.6);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+}
+#free-audit-close-btn {
+display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+}
+/* Button States */
+.btn-sending {
+position: relative; overflow: hidden; white-space: nowrap; background-color: transparent !important;
+background-image: linear-gradient(110deg, #2563eb 0%, #3b82f6 25%, #93c5fd 50%, #3b82f6 75%, #2563eb 100%) !important;
+background-size: 300% 100% !important; background-position: 0% 50% !important; animation: btnWaveMove 1.2s linear infinite !important;
+color: white !important; border-color: transparent !important; will-change: background-position;
+}
+@keyframes btnWaveMove { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+.btn-sent { background-color: #10b981 !important; border-color: #059669 !important; color: white !important; }
+.btn-pop { animation: pop-scale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes pop-scale { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+/* Modal Scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">.font-newsreader { font-family: 'Newsreader', serif !important; }</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">.font-oswald { font-family: 'Oswald', sans-serif !important; }</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }</style><link id="all-fonts-link-font-cormorant" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-cormorant">.font-cormorant { font-family: 'Cormorant Garamond', serif !important; }</style></head>
+
+<body class="antialiased selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden relative text-gray-300">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component fixed top-0 w-full h-screen -z-10 saturate-50 brightness-50 opacity-50" data-alpha-mask="60" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 60%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 60%, transparent)"><div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+  <div data-us-project="tPmIIl0vKqHO9yqmtge2" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+
+    <!-- Ambient Background Motion -->
+    <div class="fixed top-0 left-0 w-full h-[120vh] overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] mix-blend-screen animate-[ambient-pulse_8s_ease-in-out_infinite]"></div>
+        <div class="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-indigo-900/10 rounded-full blur-[100px] mix-blend-screen animate-[ambient-pulse_10s_ease-in-out_infinite_reverse]"></div>
+    </div>
+
+    <!-- Centered Navbar Container -->
+    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center">
+      <nav class="pointer-events-auto w-full max-w-6xl bg-[#030304]/60 backdrop-blur-xl border border-white/10 rounded-full shadow-lg transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0s_both] animate">
+        <div class="flex h-14 pr-5 pl-5 items-center justify-between">
+          
+          <!-- Left: Logo & Brand Name (Acts as Home Button) -->
+          <a href="index.html" class="flex items-center gap-3 group">
+            <div class="flex group-hover:border-blue-500/50 transition-colors duration-300 bg-center -translate-x-2 -translate-x-4 bg-white/5 w-14 h-14 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1f82e3d1-668a-486d-927b-027c70e5d61e_320w.png)] bg-cover border-white/0 border rounded-full relative shadow-[0_0_10px_rgba(0,0,0,0.5)] items-center justify-center">
+              <iconify-icon icon="solar:brain-linear" width="16" height="16" class="text-white group-hover:text-blue-400 transition-colors"></iconify-icon>
+            </div>
+            <span class="text-[15px] group-hover:text-white transition-colors -translate-x-6 text-xl font-medium text-[#BFC9D6]/85 tracking-tight font-space">GDSolutions</span>
+          </a>
+
+          <!-- Right: Navigation & Contact -->
+          <div class="flex items-center gap-6">
+            <!-- Navigation Links -->
+            <a href="services.html" class="hover:text-white transition-colors text-sm font-medium text-gray-400 font-geist">Services</a>
+            <a href="blog.html" class="text-sm font-medium text-gray-400 hover:text-white transition-colors font-geist">Blog</a>
+            
+            <!-- Contact Button -->
+            <button id="nav-contact-btn" type="button" class="group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_-5px_rgba(29,78,216,0.4)] focus:outline-none text-[13px] items-center justify-center text-lg font-medium text-white tracking-wide font-geist h-9 rounded-full px-6 relative cursor-pointer">
+                <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
+                    <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#2563eb_360deg)]" style="animation: beam-spin 3s linear infinite;"></div>
+                    <div class="absolute inset-[1px] rounded-full bg-[#030304]"></div>
+                </div>
+                <div class="-z-10 overflow-hidden bg-[#0a0a0c] rounded-full absolute top-[2px] right-[2px] bottom-[2px] left-[2px]">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-transparent"></div>
+                    <div class="text-xl opacity-30 mix-blend-overlay absolute top-0 right-0 bottom-0 left-0" style="background-image: radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px); background-size: 8px 8px; animation: dots-move 12s linear infinite"></div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-1/2 bg-blue-600/10 blur-xl rounded-full pointer-events-none transition-colors duration-500 group-hover:bg-blue-600/30"></div>
+                </div>
+                <span class="transition-colors group-hover:text-white z-10 text-[#BFC9D6]/90 relative">Contact</span>
+                <iconify-icon icon="solar:arrow-right-linear" width="14" height="14" class="z-10 transition-transform duration-300 group-hover:translate-x-0.5 ml-1.5 relative"></iconify-icon>
+            </button>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+
+    <!-- 1. HERO SECTION -->
+    <header class="flex flex-col text-center w-full z-10 pt-40 pb-20 relative items-center justify-center">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <div class="max-w-4xl mx-auto space-y-6">
+          <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both] inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.1)] animate">
+            <span class="w-1.5 h-1.5 rounded-full animate-pulse bg-blue-400"></span>
+            <span class="text-[11px] uppercase font-semibold tracking-widest text-blue-200 font-geist">• BLOG</span>
+          </div>
+          <h1 class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both] md:text-7xl leading-[0.95] animate text-5xl font-semibold text-white tracking-tighter font-space drop-shadow-2xl" style="">Insights &amp; Case Studies from Real Client Work</h1>
+          <p class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both] md:text-xl leading-relaxed animate text-lg font-light text-gray-400 font-geist max-w-xl mr-auto ml-auto" style="">Practical breakdowns of real projects from the problems we uncovered, the systems we built until the results that followed.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. FEATURED POST -->
+    <section class="z-10 pb-16 relative">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both] liquid-card blog-card md:p-12 group animate w-full border-white/5 border rounded-2xl pt-8 pr-8 pb-8 pl-8 relative">
+           <div class="mb-6">
+               <span class="inline-block px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono tracking-wider uppercase">FEATURED</span>
+           </div>
+           <h2 class="md:text-4xl group-hover:text-blue-200 transition-colors text-3xl font-medium text-white tracking-tight font-space mb-4" style="">Why a "Good-Looking" Website Was Quietly Losing Enquiries</h2>
+           <p class="leading-relaxed text-lg font-light text-gray-400 font-geist max-w-3xl mb-8" style="">A business came to us with a website they were proud of - modern design, clean visuals, and a professional feel - yet enquiries had been steadily declining. On the surface, nothing looked wrong, but deeper analysis revealed structural issues that were limiting search visibility and confusing search engines. We reviewed the site’s HTML structure, metadata, internal linking, and how pages were being interpreted during indexing. Once these foundations were corrected and priorities clearly defined, the site began ranking more consistently for high-intent searches. Traffic stabilized first, followed by a noticeable improvement in enquiry quality. The biggest gains didn’t come from redesigning the site, but from fixing what was happening underneath it.</p>
+           <div class="flex flex-wrap items-center gap-4 mb-8">
+               <div class="text-xs text-gray-400 font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-3 pb-1 pl-3">SEO</div>
+               <div class="text-xs text-gray-400 font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-3 pb-1 pl-3">September 2025</div>
+           </div>
+           <div class="">
+               
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. POSTS LIST (Single Column Stack) -->
+    <section class="pb-32 relative z-10">
+      <div class="max-w-[1400px] mr-auto ml-auto pr-6 pl-6">
+        <!-- Changed from grid-cols-2 to flex-col with gap-12 for single column stack -->
+        <div class="flex flex-col gap-12">
+            
+            <!-- Post 2 -->
+            <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.15s_both] liquid-card blog-card rounded-2xl p-8 md:p-10 w-full group animate">
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                         <span class="inline-block text-[10px] uppercase text-gray-400 tracking-wider font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-2.5 pb-1 pl-2.5" style="">Website Architecture</span>
+                         <span class="text-xs text-gray-500 font-mono">September 2025</span>
+                    </div>
+                    <div class="">
+                        <h3 class="md:text-3xl group-hover:text-blue-200 transition-colors text-2xl font-medium text-white tracking-tight font-space mb-4" style="">How Poor Page Structure Was Holding Back Organic Traffic</h3>
+                        <p class="leading-relaxed text-lg font-light text-gray-400 font-geist max-w-4xl" style="">In this project, the website wasn’t failing because of content quality or lack of effort - it was failing because its structure didn’t make sense to search engines. Important pages were buried too deep, internal links were inconsistent, and page hierarchy sent mixed signals about what actually mattered. We mapped out how the site was being crawled, restructured the page flow, and clarified relationships between core services and supporting content. Once search engines could clearly understand the site’s priorities, indexing became more consistent and rankings began to improve. Over time, this translated into more stable organic traffic and fewer peaks and drops in visibility.</p>
+                    </div>
+                    <div class="pt-2">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post 3 -->
+            <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both] liquid-card blog-card rounded-2xl p-8 md:p-10 w-full group animate">
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                         <span class="inline-block text-[10px] uppercase text-gray-400 tracking-wider font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-2.5 pb-1 pl-2.5" style="">SEO Performance</span>
+                         <span class="text-xs text-gray-500 font-mono" style="">September 2025</span>
+                    </div>
+                    <div class="">
+                        <h3 class="md:text-3xl group-hover:text-blue-200 transition-colors text-2xl font-medium text-white tracking-tight font-space mb-4" style="">Why SEO Issues Rarely Look Like SEO Problems</h3>
+                        <p class="leading-relaxed text-lg font-light text-gray-400 font-geist max-w-4xl" style="">In many cases, the businesses we work with don’t realise they have an SEO problem because nothing appears “broken.” The website loads, pages exist, and content looks fine - yet traffic remains low and enquiries are inconsistent. When we audited this site, the issue wasn’t a lack of effort, but a lack of clarity for search engines. Metadata was incomplete, internal linking was weak, and page intent was unclear. We corrected these foundational issues so search engines could properly understand, prioritise, and rank the content. As visibility improved, organic traffic followed - and with it, a noticeable increase in search-driven enquiries.</p>
+                    </div>
+                    <div class="pt-2">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post 4 -->
+            <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.25s_both] liquid-card blog-card rounded-2xl p-8 md:p-10 w-full group">
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                         <span class="inline-block text-[10px] uppercase text-gray-400 tracking-wider font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-2.5 pb-1 pl-2.5" style="">AI Automation</span>
+                         <span class="text-xs text-gray-500 font-mono" style="">September 2025</span>
+                    </div>
+                    <div class="">
+                        <h3 class="md:text-3xl group-hover:text-blue-200 transition-colors text-2xl font-medium text-white tracking-tight font-space mb-4" style="">How Slow Website Responses Were Costing Enquiries AFTER Hours</h3>
+                        <p class="leading-relaxed text-lg font-light text-gray-400 font-geist max-w-4xl" style="">This business had steady traffic coming to their website, but a large percentage of enquiries were going unanswered or delayed - especially outside business hours. Visitors would submit a form or ask a question and wait hours, sometimes days, for a response. By the time a human replied, the opportunity was often already gone. We identified this delay as the core issue and implemented AI-driven automation directly into the website to handle enquiries instantly. The system could respond, qualify the enquiry, and route it correctly without human intervention. The result was faster engagement, fewer missed opportunities, and enquiries being captured and handled even when the business was offline.</p>
+                    </div>
+                    <div class="pt-2">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post 5 -->
+            <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both] liquid-card blog-card rounded-2xl p-8 md:p-10 w-full group">
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                         <span class="inline-block text-[10px] uppercase text-gray-400 tracking-wider font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-2.5 pb-1 pl-2.5" style="">Automation</span>
+                         <span class="text-xs text-gray-500 font-mono" style="">September 2025</span>
+                    </div>
+                    <div class="">
+                        <h3 class="md:text-3xl group-hover:text-blue-200 transition-colors text-2xl font-medium text-white tracking-tight font-space mb-4" style="">How Small Manual Tasks Were Quietly Wasting Weeks of Time Each Year</h3>
+                        <p class="leading-relaxed text-lg font-light text-gray-400 font-geist max-w-4xl" style="">This business wasn’t facing a single obvious problem - instead, productivity was being slowly drained by dozens of small, manual tasks that had become “normal” over time. Data was being copied between systems, enquiries were logged by hand, follow-ups were inconsistent, and reporting required manual effort each week. Individually these tasks seemed minor, but together they compounded into weeks of lost time every year. We mapped the existing workflows, identified where human input added no real value, and designed automation systems that integrated directly into the tools they were already using. These systems now run quietly in the background, reducing errors, saving time, and allowing the team to focus on higher-value work that actually drives revenue.</p>
+                    </div>
+                    <div class="pt-2">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post 6 -->
+            <div class="animate-on-scroll [animation:animationIn_0.8s_ease-out_0.35s_both] liquid-card blog-card rounded-2xl p-8 md:p-10 w-full group">
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                         <span class="inline-block text-[10px] uppercase text-gray-400 tracking-wider font-mono bg-white/5 border-white/10 border rounded-md pt-1 pr-2.5 pb-1 pl-2.5" style="">Lead systems</span>
+                         <span class="text-xs text-gray-500 font-mono" style="">September 2025</span>
+                    </div>
+                    <div class="">
+                        <h3 class="md:text-3xl group-hover:text-blue-200 transition-colors text-2xl font-medium text-white tracking-tight font-space mb-4" style="">Why Leads Were Slipping Through the Cracks Without Anyone Noticing</h3>
+                        <p class="leading-relaxed text-lg font-light text-gray-400 font-geist max-w-4xl" style="">This business was generating enquiries, but there was no clear system for handling them consistently. Some leads were followed up quickly, others were missed entirely, and there was no reliable visibility into where enquiries came from or what happened after submission. Over time, this created confusion, lost opportunities, and an inaccurate picture of what was actually driving revenue. We analysed how leads entered the business, how they were handled, and where breakdowns were occurring. By introducing structured lead qualification and automated logging, every enquiry was captured, categorised, and routed correctly. The result was clearer visibility, faster follow-ups, and confidence that no genuine opportunity was being lost due to process gaps.
+</p>
+                    </div>
+                    <div class="pt-2">
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. BOTTOM CTA -->
+    <section class="py-32 relative z-10 border-t border-white/5 bg-[#030304]">
+        
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 border-t border-white/5 bg-[#030304]/80 backdrop-blur-md">
+      <div class="max-w-[1400px] mx-auto px-6 py-12 md:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 justify-between">
+          <div class="flex flex-col gap-6 max-w-sm">
+             <div class="flex items-center gap-3">
+               <div class="flex bg-white/5 w-8 h-8 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c2e5aa16-af68-43f6-8a8d-36e4d032b29d_320w.png)] bg-cover bg-center border-white/50 border rounded-full items-center justify-center">
+                  <iconify-icon icon="solar:brain-linear" width="16" height="16" class="text-white"></iconify-icon>
+               </div>
+               <span class="text-xl font-medium font-space text-white tracking-tight">GDSolutions.ai</span>
+             </div>
+             <p class="leading-relaxed text-sm text-gray-400 font-geist">Websites evolved with AI - online presence, SEO, and automation that drives revenue.</p>
+             <div class="text-sm text-gray-400 font-geist">
+                Support: <a href="mailto:support@gdsolutions.ai" class="hover:text-white transition-colors">support@gdsolutions.ai</a>
+             </div>
+             <p class="text-xs text-gray-600 font-mono mt-2">© 2024 GDSolutions.ai. All rights reserved.</p>
+          </div>
+          <div class="flex flex-col md:items-end gap-6">
+             <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium font-geist text-gray-400">
+               <a href="services.html" class="hover:text-white transition-colors">Services</a>
+               <a href="blog.html" class="hover:text-white transition-colors">Blog</a>
+               <a href="https://www.linkedin.com/company/gdsolutions-ai/" target="_blank" class="hover:text-white transition-colors">LinkedIn</a>
+               <a href="#" class="hover:text-white transition-colors">Terms</a>
+               <a href="#" class="hover:text-white transition-colors">Privacy</a>
+             </div>
+             <a href="#" class="hidden md:inline-flex items-center gap-2 text-xs text-gray-600 hover:text-white transition-colors group">
+               Back to top <iconify-icon icon="solar:arrow-up-linear" class="group-hover:-translate-y-0.5 transition-transform"></iconify-icon>
+             </a>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-white/5 flex flex-col gap-2 text-[10px] md:text-[11px] text-gray-600 font-geist leading-relaxed opacity-60">
+           <p>Information on this site is for general purposes only and does not constitute legal, financial, or professional advice.</p>
+           <p>Results may vary depending on industry, website condition, and implementation scope.</p>
+           <p>Third-party names and logos are the property of their respective owners.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Gradient Blur -->
+    <div class="gradient-blur"></div>
+
+    <!-- 1. INSTANT AUDIT MODAL (Required for logic integrity) -->
+    <div id="audit-modal" class="hidden fixed inset-0 z-[100]" role="dialog" aria-modal="true">
+        <div id="modal-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity"></div>
+        <div id="modal-wrapper" class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg p-4 transition-all duration-500">
+            <div class="bg-[#08080A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
+                <div class="flex items-center justify-between p-6 border-b border-white/5">
+                    <h3 class="text-xl font-space font-medium text-white tracking-tight">Your Instant Audit</h3>
+                    <button id="modal-close-btn" class="text-gray-500 hover:text-white transition-colors">
+                        <iconify-icon icon="solar:close-circle-linear" width="24" height="24"></iconify-icon>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto custom-scrollbar">
+                    <div id="modal-response-content" class="text-gray-300 font-geist font-light leading-relaxed text-base space-y-4"></div>
+                    <div id="modal-error-code" class="hidden justify-end mt-4">
+                        <span class="text-[10px] font-mono text-red-500/50 border border-red-500/10 px-2 py-1 rounded bg-red-500/5 uppercase"></span>
+                    </div>
+                    <div id="modal-action-area" class="mt-8 pt-6 border-t border-white/5">
+                        <button id="modal-morph-trigger" class="w-full flex items-center justify-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600/20 hover:text-blue-300 transition-all rounded-lg py-3 px-4 font-medium text-sm font-geist group">
+                            <iconify-icon icon="solar:letter-linear" width="18" height="18"></iconify-icon>
+                            Email me a detailed report
+                        </button>
+                        <div id="modal-report-form" class="hidden opacity-0 max-h-0 overflow-hidden form-expand">
+                            <div class="pt-4 space-y-4">
+                                <div><label class="block text-xs font-mono text-gray-500 mb-1.5 uppercase">Full Name</label><input type="text" id="report-name" class="w-full bg-[#030304] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors" placeholder="John Doe"></div>
+                                <div><label class="block text-xs font-mono text-gray-500 mb-1.5 uppercase">Business Email</label><input type="email" id="report-email" class="w-full bg-[#030304] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors" placeholder="john@company.com"></div>
+                                <button id="report-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-2.5 text-sm font-medium transition-colors shadow-lg shadow-blue-900/20">Send my report</button>
+                                <p id="report-success-note" class="hidden text-sm text-center text-white/70 mt-3 font-geist">Keep an eye on your inbox</p>
+                                <p id="report-status" class="text-xs text-center text-gray-500 h-4"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. FREE AUDIT / CONTACT MODAL -->
+    <div id="free-audit-modal" class="hidden fixed inset-0 z-[110]" role="dialog" aria-modal="true">
+        <!-- Backdrop with Strong Blur -->
+        <div id="free-audit-backdrop" class="fixed inset-0 transition-opacity"></div>
+
+        <!-- Modal Container (Liquid Glass) -->
+        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl p-4 max-h-[95vh] overflow-y-auto custom-scrollbar">
+            <div class="liquid-glass rounded-3xl relative overflow-hidden">
+                <!-- Background Layers -->
+                <div class="absolute inset-0 -z-20 bg-[url('https://wdfrapvhdrijkdmupvsq.supabase.co/storage/v1/object/public/public_assets/Globe-at-night')] bg-cover bg-center opacity-35 mix-blend-normal pointer-events-none brightness-50"></div>
+                <div class="absolute inset-0 -z-10 bg-gradient-to-br from-black/40 to-transparent pointer-events-none"></div>
+
+                <!-- Close Button -->
+                <button id="free-audit-close-btn" class="absolute top-5 right-5 z-30 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 border border-white/5 rounded-full backdrop-blur-md">
+                    <iconify-icon icon="solar:close-circle-linear" width="24" height="24"></iconify-icon>
+                </button>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-0">
+                    
+                    <!-- Left Column: Form -->
+                    <div class="md:col-span-8 p-10 md:p-12 relative z-10">
+                        <h3 class="text-3xl font-space font-semibold text-white mb-3 tracking-tight">Let's Work Together</h3>
+                        <p class="text-gray-400 font-geist font-light text-sm mb-10 max-w-lg leading-relaxed">We’ll identify what’s holding your growth back, strengthen the areas where you’re underperforming, and highlight opportunities you may have overlooked.</p>
+                        
+                        <form id="free-audit-form" class="space-y-6" autocomplete="off">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Name <span class="text-blue-500">*</span></label>
+                                    <input type="text" id="free-audit-name" required="" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="John Doe" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Email <span class="text-blue-500">*</span></label>
+                                    <input type="email" id="free-audit-email" required="" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="john@company.com" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="email">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Website (Highly Suggested)</label>
+                                    <input type="url" id="free-audit-website" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="https://example.com" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Phone</label>
+                                    <input type="tel" id="free-audit-phone" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="+27 82 123 4567" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="tel">
+                                </div>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">What issues are you facing? <span class="text-blue-500">*</span></label>
+                                <textarea id="free-audit-issue" required="" rows="3" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none resize-none" placeholder="Where are you losing the most customers, wasting the most time, or what issues do you want to address?" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="button" id="free-audit-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-4 text-sm font-medium transition-all shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2 group cursor-pointer hover:-translate-y-0.5">
+                                    <span>Submit</span>
+                                    <iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                                </button>
+                                <p id="free-audit-status-msg" class="text-center text-xs text-emerald-400 mt-4 font-mono h-4"></p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: Info Cards -->
+                    <div class="md:col-span-4 p-10 md:p-12 md:pl-0 relative z-10 flex flex-col justify-start">
+                        <div class="flex flex-col gap-3 w-full md:mt-[8.5rem]">
+                            <!-- Email Card -->
+                            <div class="liquid-card rounded-xl p-4 w-full h-auto flex flex-col justify-center group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-110 transition-transform duration-300 group-hover:bg-blue-500/10 group-hover:border-blue-500/20">
+                                        <iconify-icon icon="solar:letter-linear" width="20" height="20"></iconify-icon>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h4 class="text-white font-medium font-space text-base">Email</h4>
+                                        <a href="mailto:support@gdsolutions.ai" class="text-gray-400 text-sm mt-0.5 block hover:text-white transition-colors truncate font-geist">support@gdsolutions.ai</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Follow Us Card -->
+                            <div class="liquid-card rounded-xl p-4 w-full h-auto flex flex-col justify-center group">
+                                <h4 class="text-white font-medium font-space text-base mb-2">Follow Us</h4>
+                                <div class="flex gap-3">
+                                    <a href="https://www.linkedin.com/company/gdsolutions-ai/?viewAsMember=true" target="_blank" class="w-8 h-8 rounded-lg bg-[#0077b5] flex items-center justify-center text-white shadow-lg hover:shadow-[#0077b5]/40 hover:scale-105 transition-all duration-300">
+                                        <iconify-icon icon="ri:linkedin-fill" width="16" height="16"></iconify-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script>
+      /* IIFE to encapsulate Logic */
+      (function() {
+          if (window.__GDS_MODAL_SCRIPT_LOADED__) return;
+          window.__GDS_MODAL_SCRIPT_LOADED__ = true;
+          window.__auditState = { issue: "", instant_result: "", session_id: "", created_at: null };
+          
+          const WEBHOOKS = {
+            INSTANT: "https://gdsolutions96.app.n8n.cloud/webhook/instant-audit",
+            DETAILED: "https://gdsolutions96.app.n8n.cloud/webhook/detailed-report",
+            FREE_AUDIT: "https://gdsolutions96.app.n8n.cloud/webhook/free-audit-button"
+          };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Modal Elements
+            const modal = document.getElementById('audit-modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalContent = document.getElementById('modal-response-content');
+            const modalActionArea = document.getElementById('modal-action-area');
+            const modalErrorCode = document.getElementById('modal-error-code');
+            const morphTrigger = document.getElementById('modal-morph-trigger');
+            const reportForm = document.getElementById('modal-report-form');
+            const reportName = document.getElementById('report-name');
+            const reportEmail = document.getElementById('report-email');
+            const reportSubmitBtn = document.getElementById('report-submit-btn');
+            const reportStatus = document.getElementById('report-status');
+            const reportSuccessNote = document.getElementById('report-success-note');
+
+            // Free Audit / Contact Modal Elements
+            const freeAuditModal = document.getElementById('free-audit-modal');
+            const freeAuditBackdrop = document.getElementById('free-audit-backdrop');
+            const freeAuditCloseBtn = document.getElementById('free-audit-close-btn');
+            const navContactBtn = document.getElementById('nav-contact-btn');
+            const ctaContactBtn = document.getElementById('cta-contact-btn');
+            const freeAuditForm = document.getElementById('free-audit-form');
+            const freeAuditStatusMsg = document.getElementById('free-audit-status-msg');
+            const freeAuditSubmitBtn = document.getElementById('free-audit-submit-btn');
+
+            // --- INSTANT AUDIT LOGIC (Modal open/close) ---
+            const openInstantModal = (content, isError, errorCode = "") => {
+                document.getElementById('modal-wrapper').classList.remove('modal-toast-state');
+                modalActionArea.style.display = "block";
+                modalContent.innerHTML = content.trim().startsWith('<') ? content : `<p>${content}</p>`;
+                if (isError) {
+                    modalActionArea.style.display = "none";
+                    modalErrorCode.classList.remove('hidden');
+                    modalErrorCode.classList.add('flex');
+                    modalErrorCode.querySelector('span').textContent = errorCode;
+                } else {
+                    modalActionArea.style.display = "block";
+                    modalErrorCode.classList.add('hidden');
+                    modalErrorCode.classList.remove('flex');
+                    morphTrigger.style.display = "flex";
+                    reportForm.classList.add('hidden', 'opacity-0', 'max-h-0');
+                    reportForm.classList.remove('block', 'opacity-100', 'max-h-[300px]');
+                    reportName.value = ""; reportEmail.value = ""; reportStatus.textContent = "";
+                    reportSubmitBtn.disabled = false;
+                    if(reportSuccessNote) reportSuccessNote.classList.add('hidden');
+                    reportSubmitBtn.classList.remove('btn-sending', 'btn-sent', 'btn-pop');
+                    reportSubmitBtn.textContent = "Send my report";
+                    reportName.parentElement.style.display = 'block';
+                    reportEmail.parentElement.style.display = 'block';
+                }
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            };
+            
+            const closeInstantModal = () => { modal.classList.add('hidden'); document.body.style.overflow = ''; };
+            if(modalCloseBtn) modalCloseBtn.addEventListener('click', closeInstantModal);
+            if(modalBackdrop) modalBackdrop.addEventListener('click', closeInstantModal);
+            
+            // Detailed Report Submit
+            if(reportSubmitBtn) reportSubmitBtn.addEventListener('click', () => {
+                const name = reportName.value.trim();
+                const email = reportEmail.value.trim();
+                if (!name || !email || !email.includes('@')) {
+                    reportStatus.textContent = "Please enter a valid name and email.";
+                    reportStatus.classList.add('text-red-500');
+                    return;
+                }
+                reportSubmitBtn.disabled = true;
+                reportStatus.textContent = "";
+                reportSubmitBtn.textContent = "Sending";
+                reportSubmitBtn.classList.add('btn-sending');
+                fetch(WEBHOOKS.DETAILED, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, email, issue: window.__auditState.issue,
+                        instant_result: window.__auditState.instant_result,
+                        session_id: window.__auditState.session_id,
+                        page_url: window.location.href,
+                        timestamp: new Date().toISOString(),
+                        source: "modal_detailed_report"
+                    }),
+                })
+                .then(res => { if(!res.ok) console.error("Webhook error status:", res.status); })
+                .catch(err => console.error("Webhook network error:", err));
+
+                setTimeout(() => {
+                    reportSubmitBtn.classList.remove('btn-sending');
+                    reportSubmitBtn.classList.add('btn-sent', 'btn-pop');
+                    reportSubmitBtn.textContent = "Sent ✓";
+                    if(reportSuccessNote) reportSuccessNote.classList.remove('hidden');
+                    reportName.parentElement.style.display = 'none';
+                    reportEmail.parentElement.style.display = 'none';
+                }, 4000);
+            });
+            
+            if(morphTrigger) morphTrigger.addEventListener('click', () => {
+                morphTrigger.style.display = "none";
+                reportForm.classList.remove('hidden');
+                void reportForm.offsetWidth;
+                reportForm.classList.remove('opacity-0', 'max-h-0');
+                reportForm.classList.add('opacity-100', 'max-h-[300px]');
+                reportName.focus();
+            });
+
+            // --- FREE AUDIT / CONTACT MODAL LOGIC ---
+            const openFreeAudit = () => {
+                if(!freeAuditModal) return;
+                freeAuditModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                if(freeAuditForm) freeAuditForm.reset();
+                if(freeAuditStatusMsg) freeAuditStatusMsg.textContent = "";
+                if(freeAuditSubmitBtn) {
+                    freeAuditSubmitBtn.disabled = false;
+                    freeAuditSubmitBtn.classList.remove('btn-sending', 'btn-sent', 'btn-pop');
+                    freeAuditSubmitBtn.innerHTML = `<span>Submit</span><iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="group-hover:translate-x-1 transition-transform"></iconify-icon>`;
+                }
+            };
+
+            const closeFreeAudit = () => {
+                if(!freeAuditModal) return;
+                freeAuditModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            };
+
+            if(navContactBtn) navContactBtn.addEventListener('click', openFreeAudit);
+            if(ctaContactBtn) ctaContactBtn.addEventListener('click', openFreeAudit);
+            if(freeAuditCloseBtn) freeAuditCloseBtn.addEventListener('click', closeFreeAudit);
+            if(freeAuditBackdrop) freeAuditBackdrop.addEventListener('click', closeFreeAudit);
+
+            if (freeAuditSubmitBtn) {
+              freeAuditSubmitBtn.addEventListener('click', async () => {
+                const payload = {
+                  full_name: document.getElementById('free-audit-name')?.value.trim(),
+                  email: document.getElementById('free-audit-email')?.value.trim(),
+                  website: document.getElementById('free-audit-website')?.value.trim(),
+                  phone: document.getElementById('free-audit-phone')?.value.trim(),
+                  issue: document.getElementById('free-audit-issue')?.value.trim(),
+                  page_url: window.location.href,
+                  source: 'free_audit_modal',
+                  timestamp: new Date().toISOString()
+                };
+                freeAuditSubmitBtn.disabled = true;
+                freeAuditSubmitBtn.textContent = "Sending...";
+                freeAuditSubmitBtn.classList.add('btn-sending');
+
+                fetch(WEBHOOKS.FREE_AUDIT, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+
+                setTimeout(() => {
+                    freeAuditSubmitBtn.classList.remove('btn-sending');
+                    freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
+                    freeAuditSubmitBtn.textContent = "Sent ✓";
+                }, 4000);
+              });
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!freeAuditModal.classList.contains('hidden')) closeFreeAudit();
+                    if (!modal.classList.contains('hidden')) closeInstantModal();
+                }
+            });
+        });
+      })();
+    </script>
+
+</body></html>
