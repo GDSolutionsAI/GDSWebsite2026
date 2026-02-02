@@ -1,1 +1,485 @@
+<html lang="en" class="scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy | GDSolutions.ai</title>
+<!-- Scripts -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- AURA: Scroll Animation Logic -->
+<script>
+(function () {
+const style = document.createElement("style");
+style.textContent = `
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+`;
+document.head.appendChild(style);
+const once = true;
+if (!window.__inViewIO) {
+window.__inViewIO = new IntersectionObserver((entries) => {
+entries.forEach((entry) => {
+if (entry.isIntersecting) {
+entry.target.classList.add("animate");
+if (once) window.__inViewIO.unobserve(entry.target);
+}
+});
+}, { threshold: 0.15, rootMargin: "0px 0px -5% 0px" });
+}
+window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+document.querySelectorAll(selector).forEach((el) => {
+window.__inViewIO.observe(el);
+});
+};
+document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+})();
+</script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+/* Base Settings */
+body { font-family: 'Geist', sans-serif; background-color: #030304; color: #d1d5db; overflow-x: hidden; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-space { font-family: 'Space Grotesk', sans-serif; }
+.font-geist { font-family: 'Geist', sans-serif; }
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #030304; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+/* --- AURA: Blur In Animation Keyframes --- */
+@keyframes animationIn {
+0% { opacity: 0.08; filter: blur(14px); transform: translateY(18px); }
+100% { opacity: 1; filter: blur(0px); transform: translateY(0); }
+}
+/* Modal Transitions */
+.modal-enter { opacity: 0; }
+.modal-enter-active { opacity: 1; transition: opacity 300ms ease-out; }
+.modal-exit { opacity: 1; }
+.modal-exit-active { opacity: 0; transition: opacity 200ms ease-in; }
+.spinner-loader {
+width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-left-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+/* Button States */
+.btn-sending {
+position: relative; overflow: hidden; white-space: nowrap; background-color: transparent !important;
+background-image: linear-gradient(110deg, #2563eb 0%, #3b82f6 25%, #93c5fd 50%, #3b82f6 75%, #2563eb 100%) !important;
+background-size: 300% 100% !important; background-position: 0% 50% !important; animation: btnWaveMove 1.2s linear infinite !important;
+color: white !important; border-color: transparent !important; will-change: background-position;
+}
+@keyframes btnWaveMove { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+.btn-sent { background-color: #10b981 !important; border-color: #059669 !important; color: white !important; }
+.btn-pop { animation: pop-scale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes pop-scale { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+/* Liquid Glass Modal Specifics */
+.liquid-glass {
+background: rgba(8, 8, 10, 0.65);
+backdrop-filter: blur(24px);
+-webkit-backdrop-filter: blur(24px);
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.liquid-card {
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+transition: all 0.3s ease;
+}
+.liquid-card:hover {
+background: rgba(255, 255, 255, 0.05);
+border-color: rgba(255, 255, 255, 0.15);
+transform: translateY(-2px);
+}
+.liquid-input {
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+transition: all 0.2s ease;
+color: white;
+}
+.liquid-input:focus {
+background: rgba(255, 255, 255, 0.07);
+border-color: rgba(59, 130, 246, 0.5);
+box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+.liquid-input::placeholder { color: rgba(209, 213, 219, 0.5); }
+#free-audit-backdrop { background-color: rgba(0,0,0,0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+#free-audit-close-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+/* Animation Utils */
+@keyframes beam-spin { to { transform: rotate(360deg); } }
+@keyframes dots-move { 0% { background-position: 0 0; } 100% { background-position: 24px 24px; } }
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">.font-newsreader { font-family: 'Newsreader', serif !important; }</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">.font-oswald { font-family: 'Oswald', sans-serif !important; }</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }</style><link id="all-fonts-link-font-cormorant" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-cormorant">.font-cormorant { font-family: 'Cormorant Garamond', serif !important; }</style></head>
 
+<body class="antialiased selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden relative text-gray-300">
+
+    <!-- Ambient Background Motion -->
+    <div class="fixed top-0 left-0 w-full h-[120vh] overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-blue-900/05 rounded-full blur-[120px] mix-blend-screen"></div>
+    </div>
+
+    <!-- Centered Navbar Container -->
+    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center">
+      <nav class="pointer-events-auto w-full max-w-6xl bg-[#030304]/60 backdrop-blur-xl border border-white/10 rounded-full shadow-lg transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0s_both] animate">
+        <div class="flex h-14 pr-5 pl-5 items-center justify-between">
+          
+          <!-- Left: Logo & Brand Name (Home Link) -->
+          <a href="/" class="flex items-center gap-3 group">
+            <div class="flex group-hover:border-blue-500/50 transition-colors duration-300 bg-center -translate-x-2 -translate-x-4 bg-white/5 w-14 h-14 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1f82e3d1-668a-486d-927b-027c70e5d61e_320w.png)] bg-cover border-white/0 border rounded-full relative shadow-[0_0_10px_rgba(0,0,0,0.5)] items-center justify-center">
+              <iconify-icon icon="solar:brain-linear" width="16" height="16" class="text-white group-hover:text-blue-400 transition-colors"></iconify-icon>
+            </div>
+            <span class="text-[15px] group-hover:text-white transition-colors -translate-x-6 text-xl font-medium text-[#BFC9D6]/85 tracking-tight font-space" style="">GDSolutions</span>
+          </a>
+
+          <!-- Right: Links & Contact Button -->
+          <div class="flex items-center gap-6">
+            <a href="/services" class="hidden md:block text-sm font-medium text-[#BFC9D6]/85 hover:text-white transition-colors font-geist">Services</a>
+            <a href="/blog" class="hidden md:block text-sm font-medium text-[#BFC9D6]/85 hover:text-white transition-colors font-geist">Blog</a>
+            <button id="nav-contact-btn" type="button" class="group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_-5px_rgba(29,78,216,0.4)] focus:outline-none text-[13px] items-center justify-center text-lg font-medium text-white tracking-wide font-geist h-9 rounded-full px-6 relative cursor-pointer">
+                <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
+                    <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#2563eb_360deg)]" style="animation: beam-spin 3s linear infinite;"></div>
+                    <div class="absolute inset-[1px] rounded-full bg-[#030304]"></div>
+                </div>
+                <div class="-z-10 overflow-hidden bg-[#0a0a0c] rounded-full absolute top-[2px] right-[2px] bottom-[2px] left-[2px]">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-transparent"></div>
+                    <div class="text-xl opacity-30 mix-blend-overlay absolute top-0 right-0 bottom-0 left-0" style="background-image: radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px); background-size: 8px 8px; animation: dots-move 12s linear infinite"></div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-1/2 bg-blue-600/10 blur-xl rounded-full pointer-events-none transition-colors duration-500 group-hover:bg-blue-600/30"></div>
+                </div>
+                <span class="transition-colors group-hover:text-white z-10 text-[#BFC9D6]/90 relative">Contact</span>
+                <iconify-icon icon="solar:arrow-right-linear" width="14" height="14" class="z-10 transition-transform duration-300 group-hover:translate-x-0.5 ml-1.5 relative"></iconify-icon>
+            </button>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+
+    <!-- MAIN PRIVACY CONTENT -->
+    <main class="z-10 pt-48 pr-6 pb-32 pl-6 relative">
+        <div class="max-w-[900px] mx-auto animate-on-scroll [animation:animationIn_0.8s_ease-out_0.1s_both]">
+            
+            <!-- Page Header -->
+            <div class="mb-20">
+                <h1 class="text-4xl md:text-5xl font-space font-semibold text-white tracking-tight mb-4">Privacy Policy</h1>
+                <p class="uppercase text-xs text-gray-500 tracking-wider font-mono" style="">Last updated: February 2026</p>
+            </div>
+
+            <!-- Content -->
+            <div class="space-y-16">
+                
+                <!-- Section 1 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">1. Introduction</h2>
+                    <p>
+Welcome to GDSolutions. We are committed to protecting your personal information and respecting your privacy.
+This Privacy Policy explains how we collect, use, and safeguard your personal data when you visit our website.
+</p>
+
+                </section>
+
+                <!-- Section 2 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">2. Important Information and Who We Are</h2>
+                    <p>
+GDSolutions operates in accordance with applicable data protection laws.
+We are responsible for determining how and why your personal data is processed.
+</p>
+
+                </section>
+
+                <!-- Section 3 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">3. The Data We Collect About You</h2>
+                    <p>
+                        We may collect personal information including, but not limited to, identity details,
+                        contact information, technical data, usage data, and information submitted through forms.
+                    </p>
+                </section>
+
+                <!-- Section 4 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">4. How Is Your Personal Data Collected?</h2>
+                    <p>
+                        Personal data is collected through direct interactions, such as contact forms,
+                        as well as through automated technologies that record website usage and interaction data.
+                    </p>
+                </section>
+
+                <!-- Section 5 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">5. How We Use Your Personal Data</h2>
+                    <p>
+                        We use personal data only where lawful to do so, including to respond to enquiries,
+                        deliver services, improve website performance, and comply with legal obligations.
+                    </p>
+                </section>
+
+                <!-- Section 6 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">6. Data Security</h2>
+                    <p>
+                        We implement appropriate technical and organisational measures to protect personal data
+                        against unauthorised access, alteration, disclosure, or destruction.
+                    </p>
+                </section>
+
+                <!-- Section 7 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">7. Data Retention</h2>
+                    <p>
+                        Personal data is retained only for as long as necessary to fulfil the purposes
+                        outlined in this policy or as required by applicable law.
+                    </p>
+                </section>
+
+                <!-- Section 8 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">8. Your Legal Rights</h2>
+                    <p>
+                        Depending on applicable law, you may have rights to access, correct, or request
+                        the deletion of your personal data. Requests can be made via our contact channels.
+                    </p>
+                </section>
+
+                <!-- Section 9 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">9. International transfers</h2>
+                    <p>
+                        Where personal data is transferred outside your country, we take reasonable steps
+                        to ensure that appropriate safeguards are in place to protect your information.
+                    </p>
+                </section>
+
+                <!-- Section 10 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl text-white font-space font-medium tracking-tight">10. Third Party Links</h2>
+                    <p>
+                        Our website may contain links to external websites.
+                        We are not responsible for the content or privacy practices of third-party sites.
+                    </p>
+                </section>
+
+                 <!-- Section 11 -->
+                <section class="space-y-4">
+                <h2 class="text-2xl text-white font-space font-medium tracking-tight">11. Contact Details</h2>
+                <p>
+                    If you have questions about this Privacy Policy or our data practices,
+                    please contact us using the details provided on this website.
+                </p>
+                </section>
+
+                <!-- Section 12 -->
+                <section class="space-y-4">
+                <h2 class="text-2xl text-white font-space font-medium tracking-tight">12. Changes to the Privacy Policy</h2>
+                <p>
+                    We may update this Privacy Policy from time to time.
+                    Any changes will be posted on this page with an updated revision date.
+                </p>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER (Exact Replica) -->
+    <footer class="relative z-10 border-t border-white/5 bg-[#030304]/80 backdrop-blur-md">
+      <div class="max-w-[1400px] mx-auto px-6 py-12 md:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 justify-between">
+          <div class="flex flex-col gap-6 max-w-sm">
+             <div class="flex items-center gap-3">
+               <div class="flex bg-white/5 w-8 h-8 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c2e5aa16-af68-43f6-8a8d-36e4d032b29d_320w.png)] bg-cover bg-center border-white/50 border rounded-full items-center justify-center">
+                  <iconify-icon icon="solar:brain-linear" width="16" height="16" class="text-white"></iconify-icon>
+               </div>
+               <span class="text-xl font-medium font-space text-white tracking-tight">GDSolutions.ai</span>
+             </div>
+             <p class="leading-relaxed text-sm text-gray-400 font-geist">Websites evolved with AI - online presence, SEO, and automation that drives revenue.</p>
+             <div class="text-sm text-gray-400 font-geist">
+                Support: <a href="mailto:support@gdsolutions.ai" class="hover:text-white transition-colors">support@gdsolutions.ai</a>
+             </div>
+             <p class="text-xs text-gray-600 font-mono mt-2">© 2024 GDSolutions.ai. All rights reserved.</p>
+          </div>
+          <div class="flex flex-col md:items-end gap-6">
+             <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium font-geist text-gray-400">
+               <a href="/" class="hover:text-white transition-colors">Home</a>
+               <a href="/services" class="hover:text-white transition-colors">Services</a>
+               <a href="/blog" class="hover:text-white transition-colors">Blog</a>
+               <a href="https://www.linkedin.com/company/gdsolutions-ai/" target="_blank" class="hover:text-white transition-colors">LinkedIn</a>
+               <a href="#" class="hover:text-white transition-colors">Terms</a>
+               <a href="#" class="hover:text-white transition-colors">Privacy</a>
+             </div>
+             <a href="#" class="hidden md:inline-flex items-center gap-2 text-xs text-gray-600 hover:text-white transition-colors group">
+               Back to top <iconify-icon icon="solar:arrow-up-linear" class="group-hover:-translate-y-0.5 transition-transform"></iconify-icon>
+             </a>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-white/5 flex flex-col gap-2 text-[10px] md:text-[11px] text-gray-600 font-geist leading-relaxed opacity-60">
+           <p>Information on this site is for general purposes only and does not constitute legal, financial, or professional advice.</p>
+           <p>Results may vary depending on industry, website condition, and implementation scope.</p>
+           <p>Third-party names and logos are the property of their respective owners.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 2. FREE AUDIT / CONTACT MODAL (Required for Nav Button) -->
+    <div id="free-audit-modal" class="hidden fixed inset-0 z-[110]" role="dialog" aria-modal="true">
+        <div id="free-audit-backdrop" class="fixed inset-0 transition-opacity"></div>
+        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl p-4 max-h-[95vh] overflow-y-auto custom-scrollbar">
+            <div class="liquid-glass rounded-3xl relative overflow-hidden">
+                <div class="absolute inset-0 -z-20 bg-[url('https://wdfrapvhdrijkdmupvsq.supabase.co/storage/v1/object/public/public_assets/Globe-at-night')] bg-cover bg-center opacity-35 mix-blend-normal pointer-events-none brightness-50"></div>
+                <div class="absolute inset-0 -z-10 bg-gradient-to-br from-black/40 to-transparent pointer-events-none"></div>
+
+                <button id="free-audit-close-btn" class="absolute top-5 right-5 z-30 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 border border-white/5 rounded-full backdrop-blur-md">
+                    <iconify-icon icon="solar:close-circle-linear" width="24" height="24"></iconify-icon>
+                </button>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-0">
+                    <div class="md:col-span-8 p-10 md:p-12 relative z-10">
+                        <h3 class="text-3xl font-space font-semibold text-white mb-3 tracking-tight">Let's Work Together</h3>
+                        <p class="text-gray-400 font-geist font-light text-sm mb-10 max-w-lg leading-relaxed">We’ll identify what’s holding your growth back, strengthen the areas where you’re underperforming, and highlight opportunities you may have overlooked.</p>
+                        
+                        <form id="free-audit-form" class="space-y-6" autocomplete="off">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Name <span class="text-blue-500">*</span></label>
+                                    <input type="text" id="free-audit-name" required="" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="John Doe" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Email <span class="text-blue-500">*</span></label>
+                                    <input type="email" id="free-audit-email" required="" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="john@company.com" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="email">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Website (Highly Suggested)</label>
+                                    <input type="url" id="free-audit-website" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="https://example.com" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">Phone</label>
+                                    <input type="tel" id="free-audit-phone" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none" placeholder="+27 82 123 4567" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="tel">
+                                </div>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-mono text-gray-300 font-medium uppercase tracking-wider">What issues are you facing? <span class="text-blue-500">*</span></label>
+                                <textarea id="free-audit-issue" required="" rows="3" class="liquid-input w-full rounded-lg px-4 py-3.5 text-sm !text-gray-100 font-medium focus:outline-none resize-none" placeholder="Where are you losing the most customers, wasting the most time, or what issues do you want to address?" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="button" id="free-audit-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-4 text-sm font-medium transition-all shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2 group cursor-pointer hover:-translate-y-0.5">
+                                    <span>Submit</span>
+                                    <iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                                </button>
+                                <p id="free-audit-status-msg" class="text-center text-xs text-emerald-400 mt-4 font-mono h-4"></p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="md:col-span-4 p-10 md:p-12 md:pl-0 relative z-10 flex flex-col justify-start">
+                        <div class="flex flex-col gap-3 w-full md:mt-[8.5rem]">
+                            <div class="liquid-card rounded-xl p-4 w-full h-auto flex flex-col justify-center group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-110 transition-transform duration-300 group-hover:bg-blue-500/10 group-hover:border-blue-500/20">
+                                        <iconify-icon icon="solar:letter-linear" width="20" height="20"></iconify-icon>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h4 class="text-white font-medium font-space text-base">Email</h4>
+                                        <a href="mailto:support@gdsolutions.ai" class="text-gray-400 text-sm mt-0.5 block hover:text-white transition-colors truncate font-geist">support@gdsolutions.ai</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="liquid-card rounded-xl p-4 w-full h-auto flex flex-col justify-center group">
+                                <h4 class="text-white font-medium font-space text-base mb-2">Follow Us</h4>
+                                <div class="flex gap-3">
+                                    <a href="https://www.linkedin.com/company/gdsolutions-ai/?viewAsMember=true" target="_blank" class="w-8 h-8 rounded-lg bg-[#0077b5] flex items-center justify-center text-white shadow-lg hover:shadow-[#0077b5]/40 hover:scale-105 transition-all duration-300">
+                                        <iconify-icon icon="ri:linkedin-fill" width="16" height="16"></iconify-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script>
+      (function() {
+          if (window.__GDS_MODAL_SCRIPT_LOADED__) return;
+          window.__GDS_MODAL_SCRIPT_LOADED__ = true;
+          const WEBHOOK_FREE_AUDIT = "https://gdsolutions96.app.n8n.cloud/webhook/free-audit-button";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // ==========================================
+            // CONTACT MODAL LOGIC (Maintained)
+            // ==========================================
+            const freeAuditModal = document.getElementById('free-audit-modal');
+            const freeAuditBackdrop = document.getElementById('free-audit-backdrop');
+            const freeAuditCloseBtn = document.getElementById('free-audit-close-btn');
+            const navContactBtn = document.getElementById('nav-contact-btn');
+            const freeAuditForm = document.getElementById('free-audit-form');
+            const freeAuditStatusMsg = document.getElementById('free-audit-status-msg');
+            const freeAuditSubmitBtn = document.getElementById('free-audit-submit-btn');
+
+            const openFreeAudit = () => {
+                if(!freeAuditModal) return;
+                freeAuditModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                if(freeAuditForm) freeAuditForm.reset();
+                if(freeAuditStatusMsg) freeAuditStatusMsg.textContent = "";
+                if(freeAuditSubmitBtn) {
+                    freeAuditSubmitBtn.disabled = false;
+                    freeAuditSubmitBtn.classList.remove('btn-sending', 'btn-sent', 'btn-pop');
+                    freeAuditSubmitBtn.innerHTML = `<span>Submit</span><iconify-icon icon="solar:arrow-right-linear" width="18" height="18" class="group-hover:translate-x-1 transition-transform"></iconify-icon>`;
+                }
+            };
+
+            const closeFreeAudit = () => {
+                if(!freeAuditModal) return;
+                freeAuditModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            };
+
+            if(navContactBtn) navContactBtn.addEventListener('click', openFreeAudit);
+            if(freeAuditCloseBtn) freeAuditCloseBtn.addEventListener('click', closeFreeAudit);
+            if(freeAuditBackdrop) freeAuditBackdrop.addEventListener('click', closeFreeAudit);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !freeAuditModal.classList.contains('hidden')) closeFreeAudit(); });
+
+            if (freeAuditSubmitBtn) {
+              freeAuditSubmitBtn.addEventListener('click', async () => {
+                const payload = {
+                  full_name: document.getElementById('free-audit-name')?.value.trim(),
+                  email: document.getElementById('free-audit-email')?.value.trim(),
+                  website: document.getElementById('free-audit-website')?.value.trim(),
+                  phone: document.getElementById('free-audit-phone')?.value.trim(),
+                  issue: document.getElementById('free-audit-issue')?.value.trim(),
+                  page_url: window.location.href,
+                  source: 'privacy_page_modal',
+                  timestamp: new Date().toISOString()
+                };
+
+                freeAuditSubmitBtn.disabled = true;
+                freeAuditSubmitBtn.textContent = "Sending...";
+                freeAuditSubmitBtn.classList.add('btn-sending');
+
+                fetch(WEBHOOK_FREE_AUDIT, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+
+                setTimeout(() => {
+                    freeAuditSubmitBtn.classList.remove('btn-sending');
+                    freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
+                    freeAuditSubmitBtn.textContent = "Sent ✓";
+                }, 4000);
+              });
+            }
+        });
+      })();
+    </script>
+
+</body></html>
