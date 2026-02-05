@@ -300,35 +300,7 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code --> 
-
-  <script>
-  // Fire a Meta Lead event safely (won't throw errors if fbq isn't available yet)
-  function metaTrackLeadOnce() {
-    try {
-      if (window.fbq && typeof window.fbq === "function") {
-        window.fbq("track", "Lead");
-      }
-    } catch (e) {}
-  }
-</script>
-
-  <script>
-  let metaLeadTracked = false;
-
-  function metaTrackLeadOnce() {
-    if (metaLeadTracked) return;
-    metaLeadTracked = true;
-
-    try {
-      if (window.fbq && typeof window.fbq === "function") {
-        window.fbq("track", "Lead");
-      }
-    } catch (e) {}
-  }
-</script>
-
-
+<!-- End Meta Pixel Code -->    
 </head>
 
 <body class="antialiased selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden relative text-gray-300">
@@ -973,20 +945,18 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
                 btnSpinner.classList.remove('hidden');
 
                 try {
-                    const response = await fetch(WEBHOOKS.FREE_AUDIT, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload)
-})
-.then((res) => {
-  if (!res.ok) throw new Error("Webhook failed");
-
-  // ✅ REAL lead confirmed
-  metaTrackLeadOnce();
-})
-.catch((err) => {
-  console.error("Lead submit failed:", err);
-});
+                    const response = await fetch(WEBHOOKS.INSTANT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            issue: issue,
+                            page_url: window.location.href,
+                            referrer: document.referrer || "",
+                            user_agent: navigator.userAgent,
+                            timestamp: new Date().toISOString(),
+                            source: "hero_instant_audit"
+                        })
+                    });
 
                     if (!response.ok) throw new Error(`HTTP_${response.status}`);
 
