@@ -908,6 +908,21 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
 
 
         document.addEventListener("DOMContentLoaded", () => {
+  // ================================
+  // META LEAD TRACKING (GLOBAL)
+  // ================================
+  function trackLeadOnce(key = "free_audit_lead") {
+  try {
+    if (typeof window.fbq !== "function") return;
+
+    window.__metaLeadFired = window.__metaLeadFired || {};
+    if (window.__metaLeadFired[key]) return;
+
+    fbq("track", "Lead");
+    window.__metaLeadFired[key] = true;
+  } catch (e) {}
+}
+
             // ==========================================
             // 1. INSTANT AUDIT LOGIC (UNTOUCHED)
             // ==========================================
@@ -994,9 +1009,9 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
             if(submitBtn) submitBtn.addEventListener('click', handleInstantAudit);
             if(inputField) inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleInstantAudit(); });
 
-// =====================================
+// ===================================
 // FREE AUDIT SUBMIT (MODIFIED: VISUAL ANIMATION)
-// =====================================
+// ===================================
 const freeAuditSubmitBtn = document.getElementById('free-audit-submit-btn');
 
 if (freeAuditSubmitBtn) {
@@ -1016,22 +1031,37 @@ if (freeAuditSubmitBtn) {
     // VISUAL STATE: Start "Sending"
     freeAuditSubmitBtn.disabled = true;
     freeAuditSubmitBtn.textContent = "Sending...";
-    freeAuditSubmitBtn.classList.add('btn-sending'); // Adds the blue gradient wave animation
+    freeAuditSubmitBtn.classList.add('btn-sending');
 
-    // Fetch Logic (Untouched)
-    fetch(WEBHOOKS.FREE_AUDIT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    try {
+      const res = await fetch(WEBHOOKS.FREE_AUDIT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    // VISUAL STATE: Delayed Success
+      if (!res.ok) throw new Error(`FREE_AUDIT webhook failed: ${res.status}`);
+
+      // ✅ Fire Lead ONLY when Free Audit webhook succeeds
+      trackLeadOnce("free_audit_lead");
+
+    } catch (err) {
+      console.error('Free audit submit failed:', err);
+
+      // ✅ Reset UI on failure
+      freeAuditSubmitBtn.classList.remove('btn-sending');
+      freeAuditSubmitBtn.disabled = false;
+      freeAuditSubmitBtn.textContent = "Try again";
+
+      return; // ✅ CRITICAL: stops success UI
+    }
+
+    // VISUAL STATE: Delayed Success (only if webhook succeeded)
     setTimeout(() => {
-        freeAuditSubmitBtn.classList.remove('btn-sending');
-        freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
-        freeAuditSubmitBtn.textContent = "Sent ✓";
-    }, 4000); // Hard-coded 4s delay
-
+      freeAuditSubmitBtn.classList.remove('btn-sending');
+      freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
+      freeAuditSubmitBtn.textContent = "Sent ✓";
+    }, 4000);
   });
 }
 
