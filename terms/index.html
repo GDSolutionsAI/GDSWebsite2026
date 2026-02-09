@@ -487,6 +487,19 @@ provided on this website or reach our support at support@gdsolutions.ai
           const WEBHOOK_FREE_AUDIT = "https://gdsolutions96.app.n8n.cloud/webhook/free-audit-button";
 
         document.addEventListener("DOMContentLoaded", () => {
+
+          function trackLeadOnce(key = "free_audit_lead") {
+  try {
+    if (typeof window.fbq !== "function") return;
+
+    window.__metaLeadFired = window.__metaLeadFired || {};
+    if (window.__metaLeadFired[key]) return;
+
+    fbq("track", "Lead");
+    window.__metaLeadFired[key] = true;
+  } catch (e) {}
+}
+          
             // ==========================================
             // CONTACT MODAL LOGIC (Maintained)
             // ==========================================
@@ -522,36 +535,55 @@ provided on this website or reach our support at support@gdsolutions.ai
             if(freeAuditBackdrop) freeAuditBackdrop.addEventListener('click', closeFreeAudit);
             document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !freeAuditModal.classList.contains('hidden')) closeFreeAudit(); });
 
-            if (freeAuditSubmitBtn) {
-              freeAuditSubmitBtn.addEventListener('click', async () => {
-                const payload = {
-                  full_name: document.getElementById('free-audit-name')?.value.trim(),
-                  email: document.getElementById('free-audit-email')?.value.trim(),
-                  website: document.getElementById('free-audit-website')?.value.trim(),
-                  phone: document.getElementById('free-audit-phone')?.value.trim(),
-                  issue: document.getElementById('free-audit-issue')?.value.trim(),
-                  page_url: window.location.href,
-                  source: 'terms_page_modal',
-                  timestamp: new Date().toISOString()
-                };
+           if (freeAuditSubmitBtn) {
+  freeAuditSubmitBtn.addEventListener('click', async () => {
 
-                freeAuditSubmitBtn.disabled = true;
-                freeAuditSubmitBtn.textContent = "Sending...";
-                freeAuditSubmitBtn.classList.add('btn-sending');
+    const payload = {
+      full_name: document.getElementById('free-audit-name')?.value.trim(),
+      email: document.getElementById('free-audit-email')?.value.trim(),
+      website: document.getElementById('free-audit-website')?.value.trim(),
+      phone: document.getElementById('free-audit-phone')?.value.trim(),
+      issue: document.getElementById('free-audit-issue')?.value.trim(),
+      page_url: window.location.href,
+      source: 'privacy_page_modal', // keep this if you want
+      timestamp: new Date().toISOString()
+    };
 
-                fetch(WEBHOOK_FREE_AUDIT, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(payload)
-                });
+    freeAuditSubmitBtn.disabled = true;
+    freeAuditSubmitBtn.textContent = "Sending...";
+    freeAuditSubmitBtn.classList.add('btn-sending');
 
-                setTimeout(() => {
-                    freeAuditSubmitBtn.classList.remove('btn-sending');
-                    freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
-                    freeAuditSubmitBtn.textContent = "Sent ✓";
-                }, 4000);
-              });
-            }
+    try {
+      // ✅ Use the correct constant for your site
+      const res = await fetch(WEBHOOKS.FREE_AUDIT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error(`FREE_AUDIT webhook failed: ${res.status}`);
+
+      // ✅ Lead only on success
+      trackLeadOnce("free_audit_lead");
+
+    } catch (err) {
+      console.error('Free audit submit failed:', err);
+
+      freeAuditSubmitBtn.classList.remove('btn-sending');
+      freeAuditSubmitBtn.disabled = false;
+      freeAuditSubmitBtn.textContent = "Try again";
+
+      return; // ✅ stops success UI
+    }
+
+    setTimeout(() => {
+      freeAuditSubmitBtn.classList.remove('btn-sending');
+      freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
+      freeAuditSubmitBtn.textContent = "Sent ✓";
+    }, 4000);
+  });
+}
+
         });
       })();
     </script>
