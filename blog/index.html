@@ -591,6 +591,22 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
           };
 
         document.addEventListener("DOMContentLoaded", () => {
+
+// ================================
+// META LEAD TRACKING (GLOBAL)
+// ================================
+function trackLeadOnce(key = "free_audit_lead") {
+  try {
+    if (typeof window.fbq !== "function") return;
+
+    window.__metaLeadFired = window.__metaLeadFired || {};
+    if (window.__metaLeadFired[key]) return;
+
+    fbq("track", "Lead");
+    window.__metaLeadFired[key] = true;
+  } catch (e) {}
+}
+          
             // Modal Elements
             const modal = document.getElementById('audit-modal');
             const modalBackdrop = document.getElementById('modal-backdrop');
@@ -721,35 +737,60 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
             if(freeAuditCloseBtn) freeAuditCloseBtn.addEventListener('click', closeFreeAudit);
             if(freeAuditBackdrop) freeAuditBackdrop.addEventListener('click', closeFreeAudit);
 
-            if (freeAuditSubmitBtn) {
-              freeAuditSubmitBtn.addEventListener('click', async () => {
-                const payload = {
-                  full_name: document.getElementById('free-audit-name')?.value.trim(),
-                  email: document.getElementById('free-audit-email')?.value.trim(),
-                  website: document.getElementById('free-audit-website')?.value.trim(),
-                  phone: document.getElementById('free-audit-phone')?.value.trim(),
-                  issue: document.getElementById('free-audit-issue')?.value.trim(),
-                  page_url: window.location.href,
-                  source: 'free_audit_modal',
-                  timestamp: new Date().toISOString()
-                };
-                freeAuditSubmitBtn.disabled = true;
-                freeAuditSubmitBtn.textContent = "Sending...";
-                freeAuditSubmitBtn.classList.add('btn-sending');
+           // ===================================
+// FREE AUDIT SUBMIT (MODIFIED: VISUAL ANIMATION)
+// ===================================
+if (freeAuditSubmitBtn) {
+  freeAuditSubmitBtn.addEventListener('click', async () => {
 
-                fetch(WEBHOOKS.FREE_AUDIT, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(payload)
-                });
+    const payload = {
+      full_name: document.getElementById('free-audit-name')?.value.trim(),
+      email: document.getElementById('free-audit-email')?.value.trim(),
+      website: document.getElementById('free-audit-website')?.value.trim(),
+      phone: document.getElementById('free-audit-phone')?.value.trim(),
+      issue: document.getElementById('free-audit-issue')?.value.trim(),
+      page_url: window.location.href,
+      source: 'free_audit_modal',
+      timestamp: new Date().toISOString()
+    };
 
-                setTimeout(() => {
-                    freeAuditSubmitBtn.classList.remove('btn-sending');
-                    freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
-                    freeAuditSubmitBtn.textContent = "Sent ✓";
-                }, 4000);
-              });
-            }
+    // VISUAL STATE: Start "Sending"
+    freeAuditSubmitBtn.disabled = true;
+    freeAuditSubmitBtn.textContent = "Sending...";
+    freeAuditSubmitBtn.classList.add('btn-sending');
+
+    try {
+      const res = await fetch(WEBHOOKS.FREE_AUDIT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error(`FREE_AUDIT webhook failed: ${res.status}`);
+
+      // ✅ Fire Lead ONLY when Free Audit webhook succeeds
+      trackLeadOnce("free_audit_lead");
+
+    } catch (err) {
+      console.error('Free audit submit failed:', err);
+
+      // ✅ Reset UI on failure
+      freeAuditSubmitBtn.classList.remove('btn-sending');
+      freeAuditSubmitBtn.disabled = false;
+      freeAuditSubmitBtn.textContent = "Try again";
+
+      return; // ✅ CRITICAL: stops success UI
+    }
+
+    // VISUAL STATE: Delayed Success (only if webhook succeeded)
+    setTimeout(() => {
+      freeAuditSubmitBtn.classList.remove('btn-sending');
+      freeAuditSubmitBtn.classList.add('btn-sent', 'btn-pop');
+      freeAuditSubmitBtn.textContent = "Sent ✓";
+    }, 4000);
+  });
+}
+
 
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
