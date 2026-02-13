@@ -745,6 +745,16 @@ function trackLeadOnce(key = "free_audit_lead") {
 if (freeAuditSubmitBtn) {
   freeAuditSubmitBtn.addEventListener('click', async () => {
 
+    // 1) Get reCAPTCHA token (v3)
+let recaptchaToken = "";
+try {
+  recaptchaToken = await getRecaptchaToken("contact_submit");
+} catch (e) {
+  console.error("reCAPTCHA failed:", e);
+  alert("Spam protection failed to load. Please refresh and try again.");
+  return;
+}
+    
     const payload = {
       full_name: document.getElementById('free-audit-name')?.value.trim(),
       email: document.getElementById('free-audit-email')?.value.trim(),
