@@ -1160,6 +1160,23 @@ if (freeAuditSubmitBtn) {
             const freeAuditForm = document.getElementById('free-audit-form');
             const freeAuditStatusMsg = document.getElementById('free-audit-status-msg');
 
+// ===============================
+// reCAPTCHA v3 helper function
+// ===============================
+async function getRecaptchaToken(action) {
+  return new Promise((resolve, reject) => {
+    if (!window.grecaptcha) {
+      return reject(new Error("reCAPTCHA not loaded (grecaptcha missing)."));
+    }
+
+    grecaptcha.ready(() => {
+      grecaptcha.execute("6LcLDGosAAAAACk3pZ_IRJKCeccvFgcCekf7iMtv", { action })
+        .then(resolve)
+        .catch(reject);
+    });
+  });
+}
+
             const openFreeAudit = () => {
                 if(!freeAuditModal) return;
                 freeAuditModal.classList.remove('hidden');
@@ -1239,4 +1256,6 @@ if (freeAuditSubmitBtn) {
         });
       })();
     </script>
-</div></body></html>
+</div>
+</body>
+</html>
