@@ -812,6 +812,16 @@ function trackLeadOnce(key = "free_audit_lead") {
            if (freeAuditSubmitBtn) {
   freeAuditSubmitBtn.addEventListener('click', async () => {
 
+    // 1) Get reCAPTCHA token (v3)
+let recaptchaToken = "";
+try {
+  recaptchaToken = await getRecaptchaToken("contact_submit");
+} catch (e) {
+  console.error("reCAPTCHA failed:", e);
+  alert("Spam protection failed to load. Please refresh and try again.");
+  return;
+}
+
     const payload = {
       full_name: document.getElementById('free-audit-name')?.value.trim(),
       email: document.getElementById('free-audit-email')?.value.trim(),
@@ -820,7 +830,11 @@ function trackLeadOnce(key = "free_audit_lead") {
       issue: document.getElementById('free-audit-issue')?.value.trim(),
       page_url: window.location.href,
       source: 'privacy_page_modal', // keep this if you want
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+
+      recaptchaToken: recaptchaToken,
+      recaptchaAction: "contact_submit"
+
     };
 
     freeAuditSubmitBtn.disabled = true;
