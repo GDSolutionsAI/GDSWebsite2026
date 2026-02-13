@@ -301,6 +301,8 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+
+<script src="https://www.google.com/recaptcha/api.js?render=6LcLDGosAAAAACk3pZ_IRJKCeccvFgcCekf7iMtv"></script>
   
 </head>
 
@@ -1025,7 +1027,10 @@ if (freeAuditSubmitBtn) {
       issue: document.getElementById('free-audit-issue')?.value.trim(),
       page_url: window.location.href,
       source: 'free_audit_modal',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+
+      recaptchaToken: recaptchaToken,
+      recaptchaAction: "contact_submit"
     };
 
     // VISUAL STATE: Start "Sending"
@@ -1158,6 +1163,23 @@ if (freeAuditSubmitBtn) {
             const freeAuditForm = document.getElementById('free-audit-form');
             const freeAuditStatusMsg = document.getElementById('free-audit-status-msg');
 
+// ===============================
+// reCAPTCHA v3 helper function
+// ===============================
+async function getRecaptchaToken(action) {
+  return new Promise((resolve, reject) => {
+    if (!window.grecaptcha) {
+      return reject(new Error("reCAPTCHA not loaded (grecaptcha missing)."));
+    }
+
+    grecaptcha.ready(() => {
+      grecaptcha.execute("6LcLDGosAAAAACk3pZ_IRJKCeccvFgcCekf7iMtv", { action })
+        .then(resolve)
+        .catch(reject);
+    });
+  });
+}
+
             const openFreeAudit = () => {
                 if(!freeAuditModal) return;
                 freeAuditModal.classList.remove('hidden');
@@ -1237,4 +1259,6 @@ if (freeAuditSubmitBtn) {
         });
       })();
     </script>
-</div></body></html>
+</div>
+</body>
+</html>
