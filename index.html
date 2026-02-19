@@ -1410,5 +1410,22 @@ async function getRecaptchaToken(action) {
   })();
 </script>
 
+<script>
+  (function () {
+    const input = document.getElementById("audit-input-field");
+    if (!input) return;
+
+    const desktopText = "Where are you losing the most customers and time?";
+    const mobileText = "Biggest bottleneck?";
+
+    function updatePlaceholder() {
+      input.placeholder = (window.innerWidth < 768) ? mobileText : desktopText;
+    }
+
+    updatePlaceholder();
+    window.addEventListener("resize", updatePlaceholder);
+  })();
+</script>
+  
 </body>
 </html>
