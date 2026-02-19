@@ -320,7 +320,7 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
     </div>
 
     <!-- Centered Navbar Container -->
-    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center">
+    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center relative">
       <nav class="pointer-events-auto w-full max-w-6xl bg-[#030304]/60 backdrop-blur-xl border border-white/10 rounded-full shadow-lg transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0s_both] animate">
         <div class="flex h-14 pr-5 pl-5 items-center justify-between">
           
@@ -365,10 +365,9 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
 
         </div>
       </nav>
-      <div id="mobileMenu" class="md:hidden hidden mt-3 w-full max-w-6xl mx-auto px-4">
+      <div id="mobileMenu" class="md:hidden hidden absolute top-full left-0 right-0 mt-3 px-4">
     <div class="w-full rounded-2xl border border-white/10 bg-[#030304]/90 backdrop-blur-xl p-3 shadow-lg">
     <div class="flex flex-col text-sm text-gray-200">
-      <a href="/" class="py-2.5 px-3 rounded-xl hover:bg-white/5 transition">Home</a>
       <a href="/services/" class="py-2.5 px-3 rounded-xl hover:bg-white/5 transition">Services</a>
       <a href="/blog/" class="py-2.5 px-3 rounded-xl hover:bg-white/5 transition">Blog</a>
       <button id="mobileContactBtn" type="button"
