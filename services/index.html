@@ -46,6 +46,11 @@ document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
 <style>
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
 /* Base Settings */
 body { font-family: 'Inter', sans-serif; background-color: #030304; color: #d1d5db; overflow-x: hidden; }
 .font-mono { font-family: 'JetBrains Mono', monospace; }
@@ -632,6 +637,20 @@ We work with businesses globally, and every system we build is designed to scale
                 Support: <a href="mailto:support@gdsolutions.ai" class="hover:text-white transition-colors">support@gdsolutions.ai</a>
              </div>
              <p class="text-xs text-gray-600 font-mono mt-2">© 2024 GDSolutions.ai. All rights reserved.</p>
+            <p class="text-[11px] text-gray-600 leading-relaxed mt-2 opacity-70">
+             This site is protected by reCAPTCHA and the Google
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"
+             class="underline hover:text-white transition-colors">
+             Privacy Policy
+            </a>
+              and
+            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer"
+               class="underline hover:text-white transition-colors">
+               Terms of Service
+            </a>
+                apply.
+            </p>
+
           </div>
           <div class="flex flex-col md:items-end gap-6">
              <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium font-geist text-gray-400">
