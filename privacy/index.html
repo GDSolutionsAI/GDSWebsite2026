@@ -168,8 +168,8 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
         <div class="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-blue-900/05 rounded-full blur-[120px] mix-blend-screen"></div>
     </div>
 
-    <!-- Centered Navbar Container -->
-    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center">
+     <!-- Centered Navbar Container -->
+    <div class="fixed top-6 left-0 right-0 z-50 pointer-events-none px-4 flex justify-center relative">
       <nav class="pointer-events-auto w-full max-w-6xl bg-[#030304]/60 backdrop-blur-xl border border-white/10 rounded-full shadow-lg transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0s_both] animate">
         <div class="flex h-14 pr-5 pl-5 items-center justify-between">
           
@@ -182,10 +182,22 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
           </a>
 
           <!-- Right: Links & Contact Button -->
-          <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3 md:gap-6">
             <a href="/services/" class="hidden md:block text-sm font-medium text-[#BFC9D6]/85 hover:text-white transition-colors font-geist">Services</a>
             <a href="/blog/" class="hidden md:block text-sm font-medium text-[#BFC9D6]/85 hover:text-white transition-colors font-geist">Blog</a>
-            <button id="nav-contact-btn" type="button" class="group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_-5px_rgba(29,78,216,0.4)] focus:outline-none text-[13px] items-center justify-center text-lg font-medium text-white tracking-wide font-geist h-9 rounded-full px-6 relative cursor-pointer">
+            <button
+            id="mobileMenuBtn"
+            type="button"
+            class="md:hidden inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 w-10 h-10 text-white/80 hover:text-white hover:bg-white/10 transition"
+            aria-expanded="false"
+            aria-controls="mobileMenu"
+            aria-label="Open menu"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            </button>
+            <button id="nav-contact-btn" type="button" class="hidden md:inline-flex group flex overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_-5px_rgba(29,78,216,0.4)] focus:outline-none text-[13px] items-center justify-center text-lg font-medium text-white tracking-wide font-geist h-9 rounded-full px-6 relative cursor-pointer">
                 <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
                     <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#2563eb_360deg)]" style="animation: beam-spin 3s linear infinite;"></div>
                     <div class="absolute inset-[1px] rounded-full bg-[#030304]"></div>
@@ -202,6 +214,18 @@ src="https://www.facebook.com/tr?id=911418671260355&ev=PageView&noscript=1"
 
         </div>
       </nav>
+      <div id="mobileMenu" class="md:hidden hidden absolute top-full left-0 right-0 mt-3 px-4">
+    <div class="w-full rounded-2xl border border-white/10 bg-[#030304]/90 backdrop-blur-xl p-3 shadow-lg">
+    <div class="flex flex-col text-sm text-gray-200">
+      <a href="/services/" class="py-2.5 px-3 rounded-xl hover:bg-white/5 transition">Services</a>
+      <a href="/blog/" class="py-2.5 px-3 rounded-xl hover:bg-white/5 transition">Blog</a>
+      <button id="mobileContactBtn" type="button"
+        class="text-left py-2.5 px-3 rounded-xl hover:bg-white/5 transition">
+        Contact
+      </button>
+    </div>
+  </div>
+</div>
     </div>
 
     <!-- MAIN PRIVACY CONTENT -->
@@ -590,4 +614,43 @@ try {
       })();
     </script>
 
-</body></html>
+  <script>
+  (function () {
+    const btn = document.getElementById("mobileMenuBtn");
+    const menu = document.getElementById("mobileMenu");
+    const mobileContactBtn = document.getElementById("mobileContactBtn");
+    const desktopContactBtn = document.getElementById("nav-contact-btn");
+
+    if (!btn || !menu) return;
+
+    function closeMenu() {
+      menu.classList.add("hidden");
+      btn.setAttribute("aria-expanded", "false");
+    }
+
+    btn.addEventListener("click", () => {
+      const willOpen = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      btn.setAttribute("aria-expanded", String(willOpen));
+    });
+
+    // Close after tapping a link/button inside the menu
+    menu.addEventListener("click", (e) => {
+      const t = e.target;
+      if (t && (t.tagName === "A" || t.tagName === "BUTTON")) closeMenu();
+    });
+
+    // Make mobile Contact open the same popup as desktop Contact
+    if (mobileContactBtn && desktopContactBtn) {
+      mobileContactBtn.addEventListener("click", () => desktopContactBtn.click());
+    }
+
+    // Close menu when switching to desktop width
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) closeMenu();
+    });
+  })();
+</script>
+
+</body>
+</html>
