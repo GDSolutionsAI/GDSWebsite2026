@@ -917,13 +917,23 @@ try {
       btn.setAttribute("aria-expanded", String(willOpen));
     });
 
+    // Close after tapping a link/button inside the menu
     menu.addEventListener("click", (e) => {
       const t = e.target;
       if (t && (t.tagName === "A" || t.tagName === "BUTTON")) closeMenu();
     });
 
+    // Make mobile Contact open the same popup as desktop Contact
     if (mobileContactBtn && desktopContactBtn) {
-      mobileContactBtn.addEventListener("click", ()
+      mobileContactBtn.addEventListener("click", () => desktopContactBtn.click());
+    }
+
+    // Close menu when switching to desktop width
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) closeMenu();
+    });
+  })();
+</script>
 
 </body>
 </html>
