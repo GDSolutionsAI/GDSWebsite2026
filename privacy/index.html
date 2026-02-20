@@ -496,7 +496,7 @@ We are responsible for determining how and why your personal data is processed.
       (function() {
           if (window.__GDS_MODAL_SCRIPT_LOADED__) return;
           window.__GDS_MODAL_SCRIPT_LOADED__ = true;
-          const WEBHOOK_FREE_AUDIT = "https://gdsolutions96.app.n8n.cloud/webhook/free-audit-button";
+          const WEBHOOK_FREE_AUDIT = "/api/free-audit-button";
           const WEBHOOKS = { FREE_AUDIT: WEBHOOK_FREE_AUDIT };
 
         document.addEventListener("DOMContentLoaded", () => {

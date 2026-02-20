@@ -847,9 +847,9 @@ We work with businesses globally, and every system we build is designed to scale
           if (window.__GDS_MODAL_SCRIPT_LOADED__) return;
           window.__GDS_MODAL_SCRIPT_LOADED__ = true;
           
-        const WEBHOOKS = {
-            FREE_AUDIT: "https://gdsolutions96.app.n8n.cloud/webhook/free-audit-button"
-        };
+       const WEBHOOKS = {
+  FREE_AUDIT: "/api/free-audit-button"
+};
 
         document.addEventListener("DOMContentLoaded", () => {
 function trackLeadOnce(key = "free_audit_lead") {
